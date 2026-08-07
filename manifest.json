@@ -1,8 +1,9 @@
 {
-  "name": "Cruise360 Beta",
+  "name": "Cruise360",
   "short_name": "Cruise360",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F8FAFC",
-  "theme_color": "#0E3A66"
+  "background_color": "#071A33",
+  "theme_color": "#071A33",
+  "icons": []
 }
