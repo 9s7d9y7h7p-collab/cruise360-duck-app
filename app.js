@@ -16,7 +16,7 @@ const app=document.getElementById("app");
 function shell(content,title="CRUISE360",nav=true){
  app.innerHTML=`<div class="app">
   <header class="topbar">
-    <div class="brand"><img src="assets/logo.jpeg" onerror="this.src='assets/logo.svg'" alt="Cruise360"><strong>${title}</strong></div>
+    <div class="brand"><img src="logo.jpeg" onerror="this.src='logo.svg'" alt="Cruise360"><strong>${title}</strong></div>
     <button class="icon-btn">☰</button>
   </header>
   <main>${content}</main>
@@ -35,7 +35,7 @@ function render(){({home,fleet,ship,ducklist,duck,duckSearch,profile,badges,logi
 function home(){
  shell(`
   <section class="hero">
-    <img src="assets/seashore.jpeg" alt="MSC Seashore">
+    <img src="seashore.jpeg" alt="MSC Seashore">
     <div class="hero-copy"><h1>Benvenuto a bordo,<br>Nicola!</h1><p>La tua avventura inizia qui.</p></div>
   </section>
   <section class="section">
@@ -49,7 +49,7 @@ function home(){
   </section>
   <section class="section">
     <article class="card" style="display:flex;align-items:center;gap:14px">
-      <img src="assets/duck.svg" alt="Duck" style="width:84px">
+      <img src="duck.svg" alt="Duck" style="width:84px">
       <div><h3 style="margin-top:0">Scansiona una Duck</h3><p>Apri subito la sua storia tramite QR o codice.</p><div style="height:10px"></div><button class="primary" data-go="duckSearch">Scansiona Duck</button></div>
     </article>
   </section>`,"CRUISE360");
@@ -60,7 +60,7 @@ function fleet(){
   <input id="q" class="search" placeholder="Cerca una nave...">
   <div class="tabs" style="margin:12px 0"><button class="tab active">Tutte</button><button class="tab">Seaside</button><button class="tab">World</button><button class="tab">Meraviglia</button></div>
   <div class="grid">${ships.map(s=>`<article class="card ship-card" data-ship="${s.name}">
-   <img src="assets/seashore.jpeg" alt="${s.name}">
+   <img src="seashore.jpeg" alt="${s.name}">
    <div class="ship-body"><h3>${s.name}</h3><div class="small">${s.cls}</div><div class="duck-count">🦆 ${s.ducks} Duck associate</div></div>
   </article>`).join("")}</div>`,"FLOTTA MSC");
  document.querySelectorAll("[data-ship]").forEach(el=>el.addEventListener("click",()=>{state.ship=el.dataset.ship;go("ship")}));
@@ -70,7 +70,7 @@ function ship(){
  const s=ships.find(x=>x.name===state.ship)||ships[0];
  shell(`
   <button class="back" data-go="fleet">← Flotta</button>
-  <img class="detail-image" src="assets/seashore.jpeg" alt="${s.name}">
+  <img class="detail-image" src="seashore.jpeg" alt="${s.name}">
   <section class="section" style="margin-top:14px"><h1 style="margin-bottom:3px">${s.name}</h1><div class="small">${s.cls}</div></section>
   <section class="section"><div class="section-head"><h2>DATI TECNICI</h2></div>
     <article class="card table">${[
@@ -83,13 +83,13 @@ function ship(){
    <button class="primary full" data-go="ducklist">Visualizza Duck</button>
   </article></section>
   <section class="section"><div class="section-head"><h2>CRONOLOGIA DUCK</h2></div>
-   <div class="list"><div class="item"><div class="thumb"><img src="assets/duck.svg"></div><div class="grow"><strong>C360-0042 nascosta</strong><div class="small">Ponte 16 · oggi</div></div></div>
-   <div class="item"><div class="thumb"><img src="assets/duck.svg"></div><div class="grow"><strong>C360-0081 trovata</strong><div class="small">Atrio, ponte 5 · ieri</div></div></div></div>
+   <div class="list"><div class="item"><div class="thumb"><img src="duck.svg"></div><div class="grow"><strong>C360-0042 nascosta</strong><div class="small">Ponte 16 · oggi</div></div></div>
+   <div class="item"><div class="thumb"><img src="duck.svg"></div><div class="grow"><strong>C360-0081 trovata</strong><div class="small">Atrio, ponte 5 · ieri</div></div></div></div>
   </section>` , s.name);
 }
 function ducklist(){
  shell(`<button class="back" data-go="ship">← ${state.ship}</button><h1>Duck associate</h1>
-  <div class="list">${ducks.map(d=>`<article class="item" data-duck="${d.code}"><div class="thumb"><img src="assets/duck.svg"></div><div class="grow"><strong>${d.name}</strong><div class="small">${d.code}<br>${d.date} · ${d.author}</div></div><span class="badge ${d.status==="Nascosta"?"green":"blue"}">${d.status}</span></article>`).join("")}</div>`,"DUCK");
+  <div class="list">${ducks.map(d=>`<article class="item" data-duck="${d.code}"><div class="thumb"><img src="duck.svg"></div><div class="grow"><strong>${d.name}</strong><div class="small">${d.code}<br>${d.date} · ${d.author}</div></div><span class="badge ${d.status==="Nascosta"?"green":"blue"}">${d.status}</span></article>`).join("")}</div>`,"DUCK");
  document.querySelectorAll("[data-duck]").forEach(el=>el.addEventListener("click",()=>{state.duck=el.dataset.duck;go("duck")}))
 }
 function duckSearch(){
@@ -100,7 +100,7 @@ function duck(){
  const d=ducks.find(x=>x.code===state.duck)||ducks[0];
  shell(`
   <button class="back" data-go="ducklist">← Indietro</button>
-  <div class="duckhero"><img src="assets/duck.svg" alt="Duck"></div>
+  <div class="duckhero"><img src="duck.svg" alt="Duck"></div>
   <section class="section" style="margin-top:14px"><div class="section-head"><div><h1 style="margin:0">${d.name}</h1><div class="small">${d.code}</div></div><span class="badge green">In viaggio</span></div></section>
   <article class="card table">${[["Codice",d.code],["Creata da",d.author],["Data creazione",d.date],["Nave di partenza","MSC Seashore"],["Ultimo ritrovamento","8 ottobre 2026"],["Ultimo luogo",d.place],["Stato","Ancora in viaggio"]].map(r=>`<div class="row"><span>${r[0]}</span><strong>${r[1]}</strong></div>`).join("")}</article>
   <section class="section"><div class="actions"><button id="keep" class="success">♥ La tengo</button><button id="hide" class="primary">⌖ La nascondo di nuovo</button></div><div id="actionbox"></div></section>
@@ -122,7 +122,7 @@ function action(type){
  <label>Messaggio facoltativo<textarea rows="3" placeholder="Messaggio"></textarea></label><button class="primary">Conferma</button></div></article>`
 }
 function profile(){
- shell(`<div class="center"><img class="profile-avatar" src="assets/logo.jpeg" onerror="this.src='assets/logo.svg'"><h1>Nicola</h1><div class="small">@nicola360</div></div>
+ shell(`<div class="center"><img class="profile-avatar" src="logo.jpeg" onerror="this.src='logo.svg'"><h1>Nicola</h1><div class="small">@nicola360</div></div>
  <section class="section"><div class="profile-stats"><div class="metric"><strong>7</strong><span>Crociere</span></div><div class="metric"><strong>5</strong><span>Navi visitate</span></div><div class="metric"><strong>18</strong><span>Duck nascoste</span></div><div class="metric"><strong>12</strong><span>Duck trovate</span></div></div></section>
  <section class="section"><div class="grid"><button class="secondary" data-go="login">Login</button><button class="primary" data-go="register">Registrati</button></div></section>`,"PROFILO")
 }
@@ -132,10 +132,10 @@ function badges(){
  ].map(b=>`<div class="badgecard ${b[2]?"":"locked"}"><div class="ico">${b[0]}</div><strong>${b[1]}</strong><div class="small">${b[2]?"Ottenuto":"Da ottenere"}</div></div>`).join("")}</div>`,"BADGE")
 }
 function login(){
- shell(`<img class="loginlogo" src="assets/logo.jpeg" onerror="this.src='assets/logo.svg'"><div class="center"><h1>Bentornato a bordo</h1><p class="small">Accedi per gestire crociere, Duck e badge.</p></div><article class="card" style="margin-top:18px"><div class="form"><label>Email<input class="field" type="email"></label><label>Password<input class="field" type="password"></label><button class="primary" data-go="profile">Accedi</button><button class="secondary" data-go="register">Registrati gratuitamente</button></div></article>`,"LOGIN",false)
+ shell(`<img class="loginlogo" src="logo.jpeg" onerror="this.src='logo.svg'"><div class="center"><h1>Bentornato a bordo</h1><p class="small">Accedi per gestire crociere, Duck e badge.</p></div><article class="card" style="margin-top:18px"><div class="form"><label>Email<input class="field" type="email"></label><label>Password<input class="field" type="password"></label><button class="primary" data-go="profile">Accedi</button><button class="secondary" data-go="register">Registrati gratuitamente</button></div></article>`,"LOGIN",false)
 }
 function register(){
- shell(`<img class="loginlogo" src="assets/logo.jpeg" onerror="this.src='assets/logo.svg'"><div class="center"><h1>Crea il tuo account</h1></div><article class="card" style="margin-top:18px"><div class="form"><label>Nome<input class="field"></label><label>Cognome<input class="field"></label><label>Nome utente<input class="field" placeholder="@nomeutente"></label><label>Email<input class="field" type="email"></label><label>Password<input class="field" type="password"></label><button class="primary" data-go="profile">Crea account</button><button class="secondary" data-go="login">Hai già un account? Accedi</button></div></article>`,"REGISTRAZIONE",false)
+ shell(`<img class="loginlogo" src="logo.jpeg" onerror="this.src='logo.svg'"><div class="center"><h1>Crea il tuo account</h1></div><article class="card" style="margin-top:18px"><div class="form"><label>Nome<input class="field"></label><label>Cognome<input class="field"></label><label>Nome utente<input class="field" placeholder="@nomeutente"></label><label>Email<input class="field" type="email"></label><label>Password<input class="field" type="password"></label><button class="primary" data-go="profile">Crea account</button><button class="secondary" data-go="login">Hai già un account? Accedi</button></div></article>`,"REGISTRAZIONE",false)
 }
 function cruises(){go("profile")}
 render();

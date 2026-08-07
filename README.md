@@ -16,3 +16,7 @@ Prima versione grafica definitiva del frontend Cruise360, basata sul mockup appr
 
 ## Nota
 Questa versione è ancora frontend dimostrativo: database, account reali e QR dinamici verranno collegati nella fase backend.
+
+
+## Compatibilità iPad/GitHub
+Questa variante usa `logo.jpeg`, `seashore.jpeg` e `duck.svg` direttamente nella cartella principale del repository, così non è necessario creare la cartella `assets` da iPad.
