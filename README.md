@@ -1,32 +1,20 @@
-# Cruise360 Duck Tracker — MVP
+# Cruise360 Beta v0.1
 
-Prototipo installabile (PWA) realizzato in HTML, CSS e JavaScript puro.
+Beta dimostrativa mobile-first della struttura approvata.
 
-## Funzioni presenti
-- Creazione di una cruising duck con codice univoco
-- Ricerca della duck tramite codice
-- Registrazione di ritrovamenti
-- Nave, porto, data, autore, messaggio e scelta “la tengo / la nascondo di nuovo”
-- Diario cronologico
-- Statistiche base
-- Salvataggio locale sul dispositivo tramite localStorage
-- Installazione sulla schermata Home come web app
+## Cosa puoi provare
+- Home
+- Flotta e scheda nave
+- Duck associate
+- Ricerca Duck per codice (usa C360-0042)
+- Pagina Duck con cronologia e statistiche
+- La tengo / La nascondo di nuovo
+- Profilo
+- Badge
+- Login / registrazione demo
+- Registrazione di una crociera
+- Flusso dimostrativo di verifica
 
-## Come provarlo
-1. Estrai lo ZIP.
-2. Avvia un piccolo server locale nella cartella, ad esempio:
-   `python3 -m http.server 8080`
-3. Apri `http://localhost:8080`.
-4. Per la demo usa il codice `C360-0001`.
-
-## Limiti dell'MVP
-I dati restano solo sul dispositivo. Per renderla pubblica servono:
-- database online;
-- autenticazione;
-- upload foto;
-- QR code realmente collegati agli URL;
-- mappa geografica;
-- dominio e hosting.
-
-## Prossima versione consigliata
-Backend Supabase o Firebase, frontend Next.js/PWA, storage immagini, geolocalizzazione e QR dinamici.
+## Importante
+Questa è una beta senza backend: non salva account reali, documenti o dati condivisi.
+Serve a capire flussi, schermate e cosa modificare prima di costruire database e autenticazione.

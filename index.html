@@ -1,156 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0B3C6F" />
-  <meta name="description" content="Cruise360 Duck Tracker: segui il viaggio delle cruising duck." />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="logo.png" />
-  <link rel="apple-touch-icon" href="logo.png" />
-  <link rel="stylesheet" href="styles.css" />
-  <title>Cruise360 Duck Tracker</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0E3A66">
+  <meta name="description" content="Beta Cruise360">
+  <title>Cruise360 Beta</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <header class="topbar">
-    <img src="logo.png" alt="Cruise360Travel" class="brand-logo" />
-    <div>
-      <h1>Cruise360 Duck Tracker</h1>
-      <p>Scansiona, registra, nascondi di nuovo.</p>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero card">
-      <div>
-        <span class="eyebrow">MVP • PROTOTIPO FUNZIONANTE</span>
-        <h2>Segui il viaggio di ogni paperella</h2>
-        <p>Ogni duck ha un codice univoco. Chi la trova può registrare nave, porto, data, foto e decidere se tenerla o nasconderla di nuovo.</p>
-      </div>
-      <div class="hero-duck" aria-hidden="true">🦆</div>
-    </section>
-
-    <nav class="tabs" aria-label="Navigazione principale">
-      <button class="tab active" data-view="home">Home</button>
-      <button class="tab" data-view="find">Trova duck</button>
-      <button class="tab" data-view="register">Registra</button>
-      <button class="tab" data-view="collection">Le mie duck</button>
-    </nav>
-
-    <section id="home" class="view active">
-      <div class="grid">
-        <article class="card action-card" data-go="find">
-          <div class="icon">🔎</div>
-          <h3>Ho trovato una duck</h3>
-          <p>Inserisci il codice stampato sul tag o nel QR.</p>
-        </article>
-        <article class="card action-card" data-go="register">
-          <div class="icon">➕</div>
-          <h3>Crea una nuova duck</h3>
-          <p>Genera una scheda con codice univoco.</p>
-        </article>
-        <article class="card">
-          <div class="icon">🌍</div>
-          <h3>Viaggi registrati</h3>
-          <p><strong id="totalFinds">0</strong> ritrovamenti nel prototipo.</p>
-        </article>
-        <article class="card">
-          <div class="icon">🚢</div>
-          <h3>Navi coinvolte</h3>
-          <p><strong id="shipCount">0</strong> navi differenti.</p>
-        </article>
-      </div>
-
-      <article class="card">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">ULTIMI SPOSTAMENTI</span>
-            <h3>Diario delle duck</h3>
-          </div>
-        </div>
-        <div id="recentTimeline" class="timeline"></div>
-      </article>
-    </section>
-
-    <section id="find" class="view">
-      <article class="card">
-        <span class="eyebrow">RICERCA</span>
-        <h2>Trova una cruising duck</h2>
-        <form id="findForm" class="stack">
-          <label>
-            Codice duck
-            <input id="findCode" placeholder="Esempio: C360-0001" autocomplete="off" />
-          </label>
-          <button class="primary" type="submit">Apri scheda</button>
-        </form>
-        <p class="hint">Per provare subito usa <strong>C360-0001</strong>.</p>
-      </article>
-      <div id="duckResult"></div>
-    </section>
-
-    <section id="register" class="view">
-      <article class="card">
-        <span class="eyebrow">NUOVA DUCK</span>
-        <h2>Crea una scheda</h2>
-        <form id="duckForm" class="stack">
-          <label>
-            Nome della duck
-            <input id="duckName" required placeholder="Esempio: Seashore Explorer" />
-          </label>
-          <label>
-            Nave di partenza
-            <input id="startShip" placeholder="MSC Seashore" />
-          </label>
-          <label>
-            Porto di partenza
-            <input id="startPort" placeholder="Miami" />
-          </label>
-          <label>
-            Messaggio iniziale
-            <textarea id="duckMessage" rows="3" placeholder="Keep or hide, you decide!"></textarea>
-          </label>
-          <button class="primary" type="submit">Crea duck</button>
-        </form>
-      </article>
-      <div id="createdDuck"></div>
-    </section>
-
-    <section id="collection" class="view">
-      <article class="card">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">COLLEZIONE</span>
-            <h2>Le mie cruising duck</h2>
-          </div>
-          <button id="resetDemo" class="secondary small">Ripristina demo</button>
-        </div>
-        <div id="duckList" class="duck-list"></div>
-      </article>
-    </section>
-
-    <section id="duckDetail" class="view">
-      <button class="back-btn" data-go="find">← Torna alla ricerca</button>
-      <div id="duckDetailContent"></div>
-    </section>
-  </main>
-
-  <footer>
-    <p>Cruise360Travel • Prototipo locale MVP</p>
-    <p>@cruise360travel</p>
-  </footer>
-
-  <template id="duckCardTemplate">
-    <article class="card duck-card">
-      <div class="duck-avatar">🦆</div>
-      <div class="duck-card-body">
-        <span class="code"></span>
-        <h3 class="name"></h3>
-        <p class="meta"></p>
-      </div>
-      <button class="secondary open-duck">Apri</button>
-    </article>
-  </template>
-
+  <div id="app"></div>
+  <script>
+    window.C360_ASSETS = {
+      logo: "assets/logo.jpeg",
+      seashore: "assets/seashore.jpeg"
+    };
+  </script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,17 +1,8 @@
 {
-  "name": "Cruise360 Duck Tracker",
-  "short_name": "Duck Tracker",
+  "name": "Cruise360 Beta",
+  "short_name": "Cruise360",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F4F8FC",
-  "theme_color": "#0B3C6F",
-  "description": "Segui il viaggio delle Cruise360 Travel Duck.",
-  "icons": [
-    {
-      "src": "logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "background_color": "#F8FAFC",
+  "theme_color": "#0E3A66"
 }
