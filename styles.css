@@ -305,3 +305,36 @@ textarea.field{resize:vertical;min-height:88px}
 /* v2.1 - crociere senza verifica */
 .profile-stats{grid-template-columns:1fr}
 .profile-stats .stat-card{max-width:100%}
+
+/* v2.2 Pannello amministratore */
+.admin-entry-card{display:flex;align-items:center;gap:13px}
+.admin-entry-card h3{margin:0 0 3px}
+.admin-entry-card p{margin:0;color:var(--muted)}
+.admin-entry-icon{width:52px;height:52px;border-radius:15px;background:#123c68;display:flex;align-items:center;justify-content:center;font-size:1.45rem}
+.admin-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.admin-title-row h1{margin-bottom:2px}
+.admin-tabs{display:flex;gap:8px;overflow:auto;padding:14px 0 16px}
+.admin-tab{border:1px solid var(--line);background:#0c2d51;color:var(--muted);padding:9px 12px;border-radius:999px;font-size:.78rem;font-weight:800;white-space:nowrap}
+.admin-tab.active{color:#fff;background:#1769d2;border-color:#298cff}
+.admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.admin-stat{display:flex;flex-direction:column;gap:3px}
+.admin-stat span{font-size:1.25rem}
+.admin-stat strong{font-size:1.75rem}
+.admin-stat small{color:var(--muted)}
+.admin-list{display:grid;gap:10px}
+.admin-user-card,.admin-duck-card,.admin-cruise-card{display:flex;align-items:center;gap:12px}
+.admin-user-avatar{width:48px;height:48px;flex:0 0 48px;border-radius:50%;background:#123f6e;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:900}
+.admin-duck-card>img{width:58px;height:48px;object-fit:contain}
+.admin-actions{display:grid;gap:7px;justify-items:stretch}
+.mini-btn{padding:7px 9px!important;font-size:.72rem!important;border-radius:9px!important}
+.danger-btn{border:1px solid rgba(255,90,90,.28);background:rgba(180,45,55,.16);color:#ff9a9a;font-weight:800}
+.admin-denied{padding:44px 0}
+.admin-denied-icon{font-size:2.5rem;margin-bottom:10px}
+@media(min-width:700px){
+ .admin-stats{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:520px){
+ .admin-user-card,.admin-duck-card,.admin-cruise-card{align-items:flex-start}
+ .admin-actions{min-width:82px}
+ .admin-title-row{align-items:center}
+}

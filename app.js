@@ -204,6 +204,31 @@ const I18N={
 ,"20 crociere registrate":{en:"20 registered cruises",fr:"20 croisières enregistrées",es:"20 cruceros registrados",de:"20 registrierte Kreuzfahrten"}
 ,"Le crociere inserite vengono salvate direttamente nel tuo profilo Cruise360Travel.":{en:"Added cruises are saved directly to your Cruise360Travel profile.",fr:"Les croisières ajoutées sont enregistrées directement dans votre profil Cruise360Travel.",es:"Los cruceros añadidos se guardan directamente en tu perfil Cruise360Travel.",de:"Hinzugefügte Kreuzfahrten werden direkt in deinem Cruise360Travel-Profil gespeichert."}
 
+,"Pannello amministratore":{en:"Admin panel",fr:"Panneau administrateur",es:"Panel de administrador",de:"Admin-Bereich"}
+,"Gestisci Cruise360Travel":{en:"Manage Cruise360Travel",fr:"Gérer Cruise360Travel",es:"Gestionar Cruise360Travel",de:"Cruise360Travel verwalten"}
+,"Apri pannello admin":{en:"Open admin panel",fr:"Ouvrir le panneau admin",es:"Abrir panel admin",de:"Admin-Bereich öffnen"}
+,"PANORAMICA":{en:"OVERVIEW",fr:"APERÇU",es:"RESUMEN",de:"ÜBERSICHT"}
+,"UTENTI":{en:"USERS",fr:"UTILISATEURS",es:"USUARIOS",de:"BENUTZER"}
+,"DUCK":{en:"DUCKS",fr:"DUCKS",es:"DUCKS",de:"DUCKS"}
+,"CROCIERE":{en:"CRUISES",fr:"CROISIÈRES",es:"CRUCEROS",de:"KREUZFAHRTEN"}
+,"Utenti":{en:"Users",fr:"Utilisateurs",es:"Usuarios",de:"Benutzer"}
+,"Duck create":{en:"Ducks created",fr:"Ducks créées",es:"Ducks creadas",de:"Erstellte Ducks"}
+,"Eventi Duck":{en:"Duck events",fr:"Événements Duck",es:"Eventos Duck",de:"Duck-Ereignisse"}
+,"Crociere":{en:"Cruises",fr:"Croisières",es:"Cruceros",de:"Kreuzfahrten"}
+,"Ultime Duck":{en:"Latest Ducks",fr:"Dernières Ducks",es:"Últimas Ducks",de:"Neueste Ducks"}
+,"Nessun dato disponibile":{en:"No data available",fr:"Aucune donnée disponible",es:"No hay datos disponibles",de:"Keine Daten verfügbar"}
+,"Amministratore":{en:"Administrator",fr:"Administrateur",es:"Administrador",de:"Administrator"}
+,"Registrato il":{en:"Registered on",fr:"Inscrit le",es:"Registrado el",de:"Registriert am"}
+,"Apri":{en:"Open",fr:"Ouvrir",es:"Abrir",de:"Öffnen"}
+,"Elimina Duck":{en:"Delete Duck",fr:"Supprimer la Duck",es:"Eliminar Duck",de:"Duck löschen"}
+,"Eliminare definitivamente questa Duck e la sua cronologia?":{en:"Permanently delete this Duck and its timeline?",fr:"Supprimer définitivement cette Duck et sa chronologie ?",es:"¿Eliminar definitivamente esta Duck y su cronología?",de:"Diese Duck und ihre Chronik dauerhaft löschen?"}
+,"Duck eliminata.":{en:"Duck deleted.",fr:"Duck supprimée.",es:"Duck eliminada.",de:"Duck gelöscht."}
+,"Elimina crociera":{en:"Delete cruise",fr:"Supprimer la croisière",es:"Eliminar crucero",de:"Kreuzfahrt löschen"}
+,"Aggiorna":{en:"Refresh",fr:"Actualiser",es:"Actualizar",de:"Aktualisieren"}
+,"Accesso non autorizzato":{en:"Unauthorized access",fr:"Accès non autorisé",es:"Acceso no autorizado",de:"Nicht autorisierter Zugriff"}
+,"Questo account non è amministratore.":{en:"This account is not an administrator.",fr:"Ce compte n’est pas administrateur.",es:"Esta cuenta no es administradora.",de:"Dieses Konto ist kein Administrator."}
+,"Torna al profilo":{en:"Back to profile",fr:"Retour au profil",es:"Volver al perfil",de:"Zurück zum Profil"}
+
 };
 
 function tr(text){
@@ -858,11 +883,22 @@ async function profile(){
    <article class="card verification-info">✓ <span>Le crociere inserite vengono salvate direttamente nel tuo profilo Cruise360Travel.</span></article>
  </section>
 
+ ${profileRow?.is_admin ? `
+ <section class="section">
+   <article class="card admin-entry-card">
+     <div class="admin-entry-icon">⚙️</div>
+     <div class="grow"><h3>Pannello amministratore</h3><p>Gestisci Cruise360Travel</p></div>
+     <button id="adminPanelBtn" class="primary">Apri pannello admin</button>
+   </article>
+ </section>` : ""}
+
  <section class="section"><article class="card"><div class="form"><button id="logoutBtn" class="secondary full">Esci dall'account</button></div></article></section>`,"PROFILO");
 
  document.getElementById("saveProfileBtn").onclick=saveProfileDetails;
  document.getElementById("addCruiseBtn").onclick=openAddCruise;
  document.querySelectorAll("[data-delete-cruise]").forEach(btn=>btn.onclick=()=>deleteCruise(btn.dataset.deleteCruise));
+ const adminPanelBtn=document.getElementById("adminPanelBtn");
+ if(adminPanelBtn) adminPanelBtn.onclick=()=>adminPanel();
  document.getElementById("logoutBtn").onclick=async()=>{await db.auth.signOut();currentUser=null;profile()};
 }
 
@@ -966,6 +1002,131 @@ async function badges(){
      </div>
    </article>`;
  }).join("")}</section>`,"BADGE");
+}
+
+async function adminPanel(tab=state.adminTab||"overview"){
+ state.adminTab=tab;
+ if(!currentUser){go("profile");return;}
+
+ const {data:me,error:meError}=await db.from("profiles").select("is_admin").eq("id",currentUser.id).maybeSingle();
+ if(meError || !me?.is_admin){
+   shell(`<div class="center admin-denied"><div class="admin-denied-icon">🔒</div><h1>Accesso non autorizzato</h1><p class="small">Questo account non è amministratore.</p><div style="height:14px"></div><button id="backProfileAdmin" class="secondary">Torna al profilo</button></div>`,"ADMIN");
+   document.getElementById("backProfileAdmin").onclick=profile;
+   return;
+ }
+
+ const [
+   {data:users,error:usersError},
+   {data:ducks,error:ducksError},
+   {data:events,error:eventsError},
+   {data:cruises,error:cruisesError}
+ ] = await Promise.all([
+   db.rpc("admin_list_users"),
+   db.from("ducks").select("*").order("created_at",{ascending:false}),
+   db.from("duck_events").select("id,duck_id,event_type,created_at").order("created_at",{ascending:false}),
+   db.from("user_cruises").select("*").order("created_at",{ascending:false})
+ ]);
+
+ const firstError=usersError||ducksError||eventsError||cruisesError;
+ if(firstError){
+   alert(firstError.message);
+   return;
+ }
+
+ const userMap={};
+ (users||[]).forEach(u=>userMap[u.user_id]=u);
+ const tabs=[
+   ["overview","PANORAMICA"],
+   ["users","UTENTI"],
+   ["ducks","DUCK"],
+   ["cruises","CROCIERE"]
+ ];
+
+ let content="";
+ if(tab==="overview"){
+   content=`
+   <section class="admin-stats">
+     <article class="card admin-stat"><span>👤</span><strong>${(users||[]).length}</strong><small>Utenti</small></article>
+     <article class="card admin-stat"><span>🦆</span><strong>${(ducks||[]).length}</strong><small>Duck create</small></article>
+     <article class="card admin-stat"><span>◷</span><strong>${(events||[]).length}</strong><small>Eventi Duck</small></article>
+     <article class="card admin-stat"><span>🚢</span><strong>${(cruises||[]).length}</strong><small>Crociere</small></article>
+   </section>
+   <section class="section"><div class="section-head"><h2>Ultime Duck</h2></div>
+     <div class="admin-list">${(ducks||[]).slice(0,6).map(d=>adminDuckCard(d,false)).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</div>
+   </section>`;
+ } else if(tab==="users"){
+   content=`<section class="admin-list">${(users||[]).map(u=>`
+     <article class="card admin-user-card">
+       <div class="admin-user-avatar">${escapeHtml((u.display_name||u.username||u.email||"?").slice(0,1).toUpperCase())}</div>
+       <div class="grow">
+         <strong>${escapeHtml(u.display_name||u.username||u.email||"Utente")}</strong>
+         <div class="small">${escapeHtml(u.email||"")}</div>
+         ${u.username?`<div class="small">@${escapeHtml(u.username)}</div>`:""}
+         <div class="small">Registrato il ${fmtDate(u.created_at)}</div>
+       </div>
+       ${u.is_admin?`<span class="badge blue">Amministratore</span>`:""}
+     </article>`).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+ } else if(tab==="ducks"){
+   content=`<section class="admin-list">${(ducks||[]).map(d=>adminDuckCard(d,true)).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+ } else if(tab==="cruises"){
+   content=`<section class="admin-list">${(cruises||[]).map(c=>{
+     const ship=ships.find(s=>(s.dbslug||slug(s.name))===c.ship_slug);
+     const owner=userMap[c.user_id];
+     return `<article class="card admin-cruise-card">
+       <div class="grow">
+         <strong>${escapeHtml(ship?.name||c.ship_slug)}</strong>
+         <div class="small">${escapeHtml(owner?.email||c.user_id)}</div>
+         <div class="small">${c.start_date?fmtDate(c.start_date):"—"}${c.end_date?` → ${fmtDate(c.end_date)}`:""}</div>
+       </div>
+       <button class="text-danger admin-delete-cruise" data-admin-delete-cruise="${escapeHtml(c.id)}">Elimina crociera</button>
+     </article>`;
+   }).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+ }
+
+ shell(`<button class="back" id="adminBackProfile">← Torna al profilo</button>
+ <div class="admin-title-row"><div><h1>Pannello amministratore</h1><p class="small">Cruise360Travel</p></div><button id="adminRefresh" class="secondary">↻ Aggiorna</button></div>
+ <div class="admin-tabs">${tabs.map(t=>`<button class="admin-tab ${tab===t[0]?"active":""}" data-admin-tab="${t[0]}">${t[1]}</button>`).join("")}</div>
+ ${content}`,"ADMIN");
+
+ document.getElementById("adminBackProfile").onclick=profile;
+ document.getElementById("adminRefresh").onclick=()=>adminPanel(tab);
+ document.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>adminPanel(b.dataset.adminTab));
+ document.querySelectorAll("[data-admin-open-duck]").forEach(b=>b.onclick=()=>duckDetail(b.dataset.adminOpenDuck));
+ document.querySelectorAll("[data-admin-delete-duck]").forEach(b=>b.onclick=()=>adminDeleteDuck(b.dataset.adminDeleteDuck));
+ document.querySelectorAll("[data-admin-delete-cruise]").forEach(b=>b.onclick=()=>adminDeleteCruise(b.dataset.adminDeleteCruise));
+}
+
+function adminDuckCard(d,showDelete=true){
+ const ship=ships.find(s=>(s.dbslug||slug(s.name))===d.current_ship_slug);
+ return `<article class="card admin-duck-card">
+   <img src="duck.svg" alt="Duck">
+   <div class="grow">
+     <strong>${escapeHtml(d.name)}</strong>
+     <div class="small">${escapeHtml(d.code)} · ${escapeHtml(statusLabel(d.status))}</div>
+     <div class="small">${escapeHtml(ship?.name||d.current_ship_slug||"—")} · ${escapeHtml(d.current_place||"—")}</div>
+   </div>
+   <div class="admin-actions">
+     <button class="secondary mini-btn" data-admin-open-duck="${escapeHtml(d.code)}">Apri</button>
+     ${showDelete?`<button class="danger-btn mini-btn" data-admin-delete-duck="${escapeHtml(d.id)}">Elimina Duck</button>`:""}
+   </div>
+ </article>`;
+}
+
+async function adminDeleteDuck(id){
+ if(!confirm(tr("Eliminare definitivamente questa Duck e la sua cronologia?"))) return;
+ const {error}=await db.from("ducks").delete().eq("id",id);
+ if(error){alert(error.message);return;}
+ alert("Duck eliminata.");
+ await refreshDuckCounts();
+ adminPanel("ducks");
+}
+
+async function adminDeleteCruise(id){
+ if(!confirm(tr("Eliminare questa crociera?"))) return;
+ const {error}=await db.from("user_cruises").delete().eq("id",id);
+ if(error){alert(error.message);return;}
+ alert("Crociera eliminata.");
+ adminPanel("cruises");
 }
 
 function render(){
