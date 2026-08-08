@@ -152,6 +152,58 @@ const I18N={
 "Menu":{en:"Menu",fr:"Menu",es:"Menú",de:"Menü"},
 "Lingua":{en:"Language",fr:"Langue",es:"Idioma",de:"Sprache"},
 "Chiudi":{en:"Close",fr:"Fermer",es:"Cerrar",de:"Schließen"}
+,"LE MIE CROCIERE":{en:"MY CRUISES",fr:"MES CROISIÈRES",es:"MIS CRUCEROS",de:"MEINE KREUZFAHRTEN"}
+,"Aggiungi crociera":{en:"Add cruise",fr:"Ajouter une croisière",es:"Añadir crucero",de:"Kreuzfahrt hinzufügen"}
+,"Nessuna crociera registrata":{en:"No cruises registered",fr:"Aucune croisière enregistrée",es:"No hay cruceros registrados",de:"Keine Kreuzfahrten registriert"}
+,"Aggiungi le tue crociere passate per costruire il tuo profilo Cruise360Travel.":{en:"Add your past cruises to build your Cruise360Travel profile.",fr:"Ajoutez vos anciennes croisières pour construire votre profil Cruise360Travel.",es:"Añade tus cruceros anteriores para crear tu perfil Cruise360Travel.",de:"Füge deine vergangenen Kreuzfahrten hinzu, um dein Cruise360Travel-Profil aufzubauen."}
+,"Totale crociere":{en:"Total cruises",fr:"Total des croisières",es:"Cruceros totales",de:"Kreuzfahrten gesamt"}
+,"Verificate":{en:"Verified",fr:"Vérifiées",es:"Verificados",de:"Verifiziert"}
+,"In verifica":{en:"Pending verification",fr:"En vérification",es:"En verificación",de:"In Prüfung"}
+,"Non verificate":{en:"Unverified",fr:"Non vérifiées",es:"No verificados",de:"Nicht verifiziert"}
+,"Nome profilo":{en:"Profile name",fr:"Nom du profil",es:"Nombre del perfil",de:"Profilname"}
+,"Nickname":{en:"Nickname",fr:"Pseudo",es:"Apodo",de:"Nickname"}
+,"Salva profilo":{en:"Save profile",fr:"Enregistrer le profil",es:"Guardar perfil",de:"Profil speichern"}
+,"Profilo aggiornato.":{en:"Profile updated.",fr:"Profil mis à jour.",es:"Perfil actualizado.",de:"Profil aktualisiert."}
+,"NUOVA CROCIERA":{en:"NEW CRUISE",fr:"NOUVELLE CROISIÈRE",es:"NUEVO CRUCERO",de:"NEUE KREUZFAHRT"}
+,"Data partenza":{en:"Start date",fr:"Date de départ",es:"Fecha de salida",de:"Startdatum"}
+,"Data rientro":{en:"End date",fr:"Date de retour",es:"Fecha de regreso",de:"Enddatum"}
+,"Codice prenotazione":{en:"Booking reference",fr:"Référence de réservation",es:"Código de reserva",de:"Buchungsnummer"}
+,"facoltativo, per richiedere la verifica":{en:"optional, to request verification",fr:"facultatif, pour demander la vérification",es:"opcional, para solicitar verificación",de:"optional, um eine Verifizierung anzufordern"}
+,"Salva crociera":{en:"Save cruise",fr:"Enregistrer la croisière",es:"Guardar crucero",de:"Kreuzfahrt speichern"}
+,"La data di rientro non può essere precedente alla partenza.":{en:"The end date cannot be before the start date.",fr:"La date de retour ne peut pas précéder la date de départ.",es:"La fecha de regreso no puede ser anterior a la salida.",de:"Das Enddatum darf nicht vor dem Startdatum liegen."}
+,"Crociera aggiunta.":{en:"Cruise added.",fr:"Croisière ajoutée.",es:"Crucero añadido.",de:"Kreuzfahrt hinzugefügt."}
+,"Verifica richiesta":{en:"Verification requested",fr:"Vérification demandée",es:"Verificación solicitada",de:"Verifizierung angefordert"}
+,"Non verificata":{en:"Unverified",fr:"Non vérifiée",es:"No verificado",de:"Nicht verifiziert"}
+,"Verificata":{en:"Verified",fr:"Vérifiée",es:"Verificado",de:"Verifiziert"}
+,"Rifiutata":{en:"Rejected",fr:"Refusée",es:"Rechazada",de:"Abgelehnt"}
+,"Elimina":{en:"Delete",fr:"Supprimer",es:"Eliminar",de:"Löschen"}
+,"Eliminare questa crociera?":{en:"Delete this cruise?",fr:"Supprimer cette croisière ?",es:"¿Eliminar este crucero?",de:"Diese Kreuzfahrt löschen?"}
+,"Crociera eliminata.":{en:"Cruise deleted.",fr:"Croisière supprimée.",es:"Crucero eliminado.",de:"Kreuzfahrt gelöscht."}
+,"I badge si sbloccano con le crociere registrate.":{en:"Badges unlock with verified cruises.",fr:"Les badges se débloquent avec les croisières vérifiées.",es:"Las insignias se desbloquean con cruceros verificados.",de:"Abzeichen werden mit verifizierten Kreuzfahrten freigeschaltet."}
+,"Prima Crociera":{en:"First Cruise",fr:"Première croisière",es:"Primer crucero",de:"Erste Kreuzfahrt"}
+,"Amante del Mare":{en:"Sea Lover",fr:"Amoureux de la mer",es:"Amante del mar",de:"Meeresliebhaber"}
+,"Esploratore":{en:"Explorer",fr:"Explorateur",es:"Explorador",de:"Entdecker"}
+,"Veterano":{en:"Veteran",fr:"Vétéran",es:"Veterano",de:"Veteran"}
+,"Ammiraglio":{en:"Admiral",fr:"Amiral",es:"Almirante",de:"Admiral"}
+,"1 crociera registrata":{en:"1 verified cruise",fr:"1 croisière vérifiée",es:"1 crucero verificado",de:"1 verifizierte Kreuzfahrt"}
+,"3 crociere registrate":{en:"3 verified cruises",fr:"3 croisières vérifiées",es:"3 cruceros verificados",de:"3 verifizierte Kreuzfahrten"}
+,"5 crociere registrate":{en:"5 verified cruises",fr:"5 croisières vérifiées",es:"5 cruceros verificados",de:"5 verifizierte Kreuzfahrten"}
+,"10 crociere registrate":{en:"10 verified cruises",fr:"10 croisières vérifiées",es:"10 cruceros verificados",de:"10 verifizierte Kreuzfahrten"}
+,"20 crociere registrate":{en:"20 verified cruises",fr:"20 croisières vérifiées",es:"20 cruceros verificados",de:"20 verifizierte Kreuzfahrten"}
+,"Sbloccato":{en:"Unlocked",fr:"Débloqué",es:"Desbloqueado",de:"Freigeschaltet"}
+,"Da sbloccare":{en:"Locked",fr:"À débloquer",es:"Por desbloquear",de:"Noch gesperrt"}
+,"Progresso":{en:"Progress",fr:"Progression",es:"Progreso",de:"Fortschritt"}
+,"Le crociere inserite vengono salvate direttamente nel tuo profilo Cruise360Travel.":{en:"Verifications are managed by Cruise360Travel. No personal identity document is required.",fr:"Les vérifications sont gérées par Cruise360Travel. Aucun document d’identité personnel n’est requis.",es:"Las verificaciones son gestionadas por Cruise360Travel. No se requiere ningún documento personal.",de:"Verifizierungen werden von Cruise360Travel verwaltet. Es ist kein persönliches Ausweisdokument erforderlich."}
+
+,"Accedi per vedere i tuoi traguardi.":{en:"Sign in to see your milestones.",fr:"Connectez-vous pour voir vos objectifs.",es:"Inicia sesión para ver tus logros.",de:"Melde dich an, um deine Erfolge zu sehen."}
+,"I badge si sbloccano con le crociere registrate.":{en:"Badges unlock with registered cruises.",fr:"Les badges se débloquent avec les croisières enregistrées.",es:"Las insignias se desbloquean con cruceros registrados.",de:"Abzeichen werden mit registrierten Kreuzfahrten freigeschaltet."}
+,"1 crociera registrata":{en:"1 registered cruise",fr:"1 croisière enregistrée",es:"1 crucero registrado",de:"1 registrierte Kreuzfahrt"}
+,"3 crociere registrate":{en:"3 registered cruises",fr:"3 croisières enregistrées",es:"3 cruceros registrados",de:"3 registrierte Kreuzfahrten"}
+,"5 crociere registrate":{en:"5 registered cruises",fr:"5 croisières enregistrées",es:"5 cruceros registrados",de:"5 registrierte Kreuzfahrten"}
+,"10 crociere registrate":{en:"10 registered cruises",fr:"10 croisières enregistrées",es:"10 cruceros registrados",de:"10 registrierte Kreuzfahrten"}
+,"20 crociere registrate":{en:"20 registered cruises",fr:"20 croisières enregistrées",es:"20 cruceros registrados",de:"20 registrierte Kreuzfahrten"}
+,"Le crociere inserite vengono salvate direttamente nel tuo profilo Cruise360Travel.":{en:"Added cruises are saved directly to your Cruise360Travel profile.",fr:"Les croisières ajoutées sont enregistrées directement dans votre profil Cruise360Travel.",es:"Los cruceros añadidos se guardan directamente en tu perfil Cruise360Travel.",de:"Hinzugefügte Kreuzfahrten werden direkt in deinem Cruise360Travel-Profil gespeichert."}
+
 };
 
 function tr(text){
@@ -768,12 +820,152 @@ async function profile(){
    };
    return;
  }
- shell(`<div class="center"><img class="profile-avatar" src="logo.jpeg"><h1>Profilo</h1><div class="small">${escapeHtml(currentUser.email||"")}</div></div>
+
+ const [{data:profileRow},{data:cruises,error:cruiseErr}] = await Promise.all([
+   db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle(),
+   db.from("user_cruises").select("*").eq("user_id",currentUser.id).order("start_date",{ascending:false})
+ ]);
+ if(cruiseErr){alert(cruiseErr.message);}
+
+ const list=cruises||[];
+
+ shell(`<div class="center profile-top">
+   <img class="profile-avatar" src="logo.jpeg">
+   <h1>${escapeHtml(profileRow?.display_name||profileRow?.username||"Profilo")}</h1>
+   <div class="small">${escapeHtml(currentUser.email||"")}</div>
+ </div>
+
+ <section class="section">
+   <article class="card">
+     <div class="form">
+       <label>Nome profilo<input id="profileDisplayName" class="field" maxlength="50" value="${escapeHtml(profileRow?.display_name||"")}"></label>
+       <label>Nickname<input id="profileUsername" class="field" maxlength="30" value="${escapeHtml(profileRow?.username||"")}"></label>
+       <button id="saveProfileBtn" class="primary full">Salva profilo</button>
+     </div>
+   </article>
+ </section>
+
+ <section class="profile-stats">
+   <article class="card stat-card"><strong>${list.length}</strong><span>Totale crociere</span></article>
+ </section>
+
+ <section class="section">
+   <div class="section-head"><h2>LE MIE CROCIERE</h2><button id="addCruiseBtn" class="small-action">＋ Aggiungi crociera</button></div>
+   <div id="myCruisesList">${renderCruiseList(list)}</div>
+ </section>
+
+ <section class="section">
+   <article class="card verification-info">✓ <span>Le crociere inserite vengono salvate direttamente nel tuo profilo Cruise360Travel.</span></article>
+ </section>
+
  <section class="section"><article class="card"><div class="form"><button id="logoutBtn" class="secondary full">Esci dall'account</button></div></article></section>`,"PROFILO");
+
+ document.getElementById("saveProfileBtn").onclick=saveProfileDetails;
+ document.getElementById("addCruiseBtn").onclick=openAddCruise;
+ document.querySelectorAll("[data-delete-cruise]").forEach(btn=>btn.onclick=()=>deleteCruise(btn.dataset.deleteCruise));
  document.getElementById("logoutBtn").onclick=async()=>{await db.auth.signOut();currentUser=null;profile()};
 }
-function badges(){
- shell(`<h1>I miei Badge</h1><div class="notice">I badge verranno collegati alle crociere verificate nella fase successiva.</div>`,"BADGE");
+
+function renderCruiseList(list){
+ if(!list.length){
+   return `<article class="card empty-panel"><h3>Nessuna crociera registrata</h3><p>Aggiungi le tue crociere passate per costruire il tuo profilo Cruise360Travel.</p></article>`;
+ }
+ return list.map(c=>{
+   const ship=ships.find(s=>(s.dbslug||slug(s.name))===c.ship_slug);
+   const dates=[c.start_date?fmtDate(c.start_date):"",c.end_date?fmtDate(c.end_date):""].filter(Boolean).join(" → ");
+   return `<article class="card cruise-card">
+     <div class="cruise-card-main">
+       <div><h3>${escapeHtml(ship?.name||c.ship_slug)}</h3><div class="small">${escapeHtml(dates||"—")}</div></div>
+     </div>
+     <button class="text-danger" data-delete-cruise="${escapeHtml(c.id)}">Elimina</button>
+   </article>`;
+ }).join("");
+}
+
+
+async function saveProfileDetails(){
+ const display_name=document.getElementById("profileDisplayName").value.trim();
+ const username=document.getElementById("profileUsername").value.trim()||null;
+ const {error}=await db.from("profiles").update({display_name,username}).eq("id",currentUser.id);
+ if(error){alert(error.message);return;}
+ alert("Profilo aggiornato.");
+ profile();
+}
+
+function openAddCruise(){
+ const opts=ships.map(s=>`<option value="${escapeHtml(s.dbslug||slug(s.name))}">${escapeHtml(s.name)}</option>`).join("");
+ shell(`<button class="back" id="backProfile">← Profilo</button>
+ <h1>NUOVA CROCIERA</h1>
+ <article class="card"><div class="form">
+   <label>Nave<select id="cruiseShip" class="field">${opts}</select></label>
+   <label>Data partenza<input id="cruiseStart" class="field" type="date"></label>
+   <label>Data rientro<input id="cruiseEnd" class="field" type="date"></label>
+   <button id="saveCruiseBtn" class="primary full">Salva crociera</button>
+ </div></article>`,"PROFILO");
+ document.getElementById("backProfile").onclick=profile;
+ document.getElementById("saveCruiseBtn").onclick=saveCruise;
+}
+
+async function saveCruise(){
+ const ship_slug=document.getElementById("cruiseShip").value;
+ const start_date=document.getElementById("cruiseStart").value||null;
+ const end_date=document.getElementById("cruiseEnd").value||null;
+
+ if(start_date && end_date && end_date<start_date){
+   alert("La data di rientro non può essere precedente alla partenza.");
+   return;
+ }
+ const btn=document.getElementById("saveCruiseBtn");
+ btn.disabled=true; btn.textContent="Salvataggio...";
+ const {error}=await db.from("user_cruises").insert({
+   user_id:currentUser.id,
+   ship_slug,
+   start_date,
+   end_date,
+   verification_status:"unverified"
+ });
+ if(error){btn.disabled=false;btn.textContent="Salva crociera";alert(error.message);return;}
+ alert("Crociera aggiunta.");
+ profile();
+}
+
+async function deleteCruise(id){
+ if(!confirm(tr("Eliminare questa crociera?"))) return;
+ const {error}=await db.from("user_cruises").delete().eq("id",id).eq("user_id",currentUser.id);
+ if(error){alert(error.message);return;}
+ alert("Crociera eliminata.");
+ profile();
+}
+
+async function badges(){
+ if(!currentUser){
+   shell(`<div class="center"><img class="profile-avatar" src="logo.jpeg"><h1>I miei Badge</h1><p class="small">Accedi per vedere i tuoi traguardi.</p><div style="height:14px"></div><button id="badgeLogin" class="primary">Accedi</button></div>`,"BADGE");
+   document.getElementById("badgeLogin").onclick=()=>go("profile");
+   return;
+ }
+ const {data:cruises,error}=await db.from("user_cruises").select("id").eq("user_id",currentUser.id);
+ if(error){alert(error.message);return;}
+ const total=(cruises||[]).length;
+ const definitions=[
+   {name:"Prima Crociera",need:1,icon:"⚓",desc:"1 crociera registrata"},
+   {name:"Amante del Mare",need:3,icon:"🌊",desc:"3 crociere registrate"},
+   {name:"Esploratore",need:5,icon:"🧭",desc:"5 crociere registrate"},
+   {name:"Veterano",need:10,icon:"🏅",desc:"10 crociere registrate"},
+   {name:"Ammiraglio",need:20,icon:"🏆",desc:"20 crociere registrate"}
+ ];
+ shell(`<div class="badge-hero"><h1>I miei Badge</h1><p>I badge si sbloccano con le crociere registrate.</p><div class="verified-counter"><strong>${total}</strong><span>Totale crociere</span></div></div>
+ <section class="badge-grid">${definitions.map(b=>{
+   const unlocked=total>=b.need;
+   const pct=Math.min(100,Math.round((total/b.need)*100));
+   return `<article class="card badge-card ${unlocked?"unlocked":"locked"}">
+     <div class="badge-medal">${b.icon}</div>
+     <div class="badge-copy"><h3>${escapeHtml(b.name)}</h3><p>${escapeHtml(b.desc)}</p>
+       <div class="badge-state">${unlocked?"✓ Sbloccato":"🔒 Da sbloccare"}</div>
+       <div class="badge-progress"><span style="width:${pct}%"></span></div>
+       <div class="small">Progresso ${Math.min(total,b.need)}/${b.need}</div>
+     </div>
+   </article>`;
+ }).join("")}</section>`,"BADGE");
 }
 
 function render(){

@@ -258,3 +258,50 @@ textarea.field{resize:vertical;min-height:88px}
  .brand-home-hero{border-radius:22px}
  .home-welcome h1{font-size:1.5rem}
 }
+
+/* v2.0 Profilo, crociere e badge */
+.profile-top{padding-top:8px}
+.profile-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+.stat-card{padding:15px;display:flex;flex-direction:column;gap:3px}
+.stat-card strong{font-size:1.65rem;color:#fff}
+.stat-card span{font-size:.82rem;color:var(--muted)}
+.stat-card.verified strong{color:#50e48a}
+.stat-card.pending strong{color:#ffcb66}
+.small-action{border:1px solid var(--line);border-radius:12px;background:#123c68;color:#fff;padding:8px 10px;font-size:.78rem;font-weight:700}
+.cruise-card{margin-bottom:10px}
+.cruise-card-main{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.cruise-card h3{margin:0 0 4px}
+.cruise-status{font-size:.72rem;font-weight:800;padding:6px 8px;border-radius:999px;white-space:nowrap}
+.cruise-status.verified{background:rgba(61,210,114,.14);color:#55e98d}
+.cruise-status.pending{background:rgba(255,190,70,.14);color:#ffd16f}
+.cruise-status.unverified{background:rgba(125,160,195,.15);color:#adcae5}
+.cruise-status.rejected{background:rgba(255,90,90,.12);color:#ff9c9c}
+.cruise-note{margin-top:8px}
+.text-danger{margin-top:12px;border:0;background:transparent;color:#ff9696;font-weight:700;padding:0}
+.verification-info{display:flex;gap:10px;align-items:flex-start;color:var(--muted);line-height:1.4;font-size:.86rem}
+.badge-hero{padding:8px 0 18px}
+.badge-hero h1{margin-bottom:4px}
+.badge-hero p{color:var(--muted);margin:0 0 14px}
+.verified-counter{display:inline-flex;align-items:baseline;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:#10355d}
+.verified-counter strong{font-size:1.6rem;color:#55e98d}
+.verified-counter span{color:var(--muted)}
+.badge-grid{display:grid;gap:12px}
+.badge-card{display:flex;gap:15px;align-items:center}
+.badge-card.locked{opacity:.66}
+.badge-medal{width:66px;height:66px;flex:0 0 66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(145deg,#154878,#09294a);border:1px solid var(--line)}
+.badge-card.unlocked .badge-medal{box-shadow:0 0 28px rgba(45,154,255,.2)}
+.badge-copy{flex:1}
+.badge-copy h3{margin:0 0 3px}
+.badge-copy p{margin:0;color:var(--muted);font-size:.84rem}
+.badge-state{margin:8px 0 7px;font-size:.78rem;font-weight:800}
+.badge-card.unlocked .badge-state{color:#55e98d}
+.badge-progress{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:5px}
+.badge-progress span{display:block;height:100%;background:#1f8fff;border-radius:inherit}
+@media(min-width:700px){
+ .profile-stats{grid-template-columns:repeat(4,1fr)}
+ .badge-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* v2.1 - crociere senza verifica */
+.profile-stats{grid-template-columns:1fr}
+.profile-stats .stat-card{max-width:100%}
