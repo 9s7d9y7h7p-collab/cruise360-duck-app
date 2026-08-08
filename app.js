@@ -19,6 +19,12 @@ function fmtDate(v){
 function statusLabel(v){
   return ({hidden:"Nascosta", found:"Trovata", kept:"Tenuta"})[v] || v || "—";
 }
+function actorMeta(e){
+  const bits=[];
+  if(e?.actor_name) bits.push(e.actor_name);
+  if(e?.actor_country) bits.push(e.actor_country);
+  return bits.join(" · ");
+}
 function dbShipToUi(s){
   return {
     name:s.name, cls:s.class_name, year:s.year, shipyard:s.shipyard,
@@ -231,30 +237,193 @@ async function duckDetail(code){
  if(error||!duck){duckNotFound(code);return;}
  const {data:events}=await db.from("duck_events").select("*").eq("duck_id",duck.id).order("created_at",{ascending:false});
  const ship=ships.find(s=>(s.dbslug||slug(s.name))===duck.current_ship_slug)?.name||duck.current_ship_slug||"—";
+ const latestKept=(events||[]).find(e=>e.event_type==="kept");
+
+ const holderLine = duck.status==="kept" && latestKept?.actor_name
+   ? `<div class="row"><span>Tenuta da</span><strong>${escapeHtml(latestKept.actor_name)}${latestKept.actor_country?` · ${escapeHtml(latestKept.actor_country)}`:""}</strong></div>`
+   : "";
+
  shell(`<button class="back" id="backDuckList">← Duck</button>
  <div class="duck-detail-hero"><img src="duck.svg"><div><span class="badge green">${escapeHtml(statusLabel(duck.status))}</span><h1>${escapeHtml(duck.name)}</h1><div class="small">${escapeHtml(duck.code)}</div></div></div>
- <article class="card table">${[["Codice",duck.code],["Nave",ship],["Ultimo luogo",duck.current_place||"—"],["Stato",statusLabel(duck.status)],["Creata",fmtDate(duck.created_at)]].map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}</article>
- <div class="duck-choice-grid"><button id="keepDuck" class="duck-choice keep">♥ La tengo</button><button id="hideDuck" class="duck-choice hide">⌖ La nascondo di nuovo</button></div>
- <section class="section"><div class="section-head"><h2>QR CODE</h2></div><article class="card mini-qr-card"><img src="${qrImageUrl(duckUrl(duck.code))}"><div><strong>${escapeHtml(duck.code)}</strong><p class="small">QR permanente collegato alla scheda online.</p></div></article></section>
- <section class="section"><div class="section-head"><h2>CRONOLOGIA</h2></div>${events?.length?events.map(e=>`<article class="card history-row"><div class="history-dot">•</div><div><strong>${escapeHtml(statusLabel(e.event_type))}</strong><div class="small">${fmtDate(e.created_at)} · ${escapeHtml(e.place||"")}</div></div></article>`).join(""):`<article class="card empty-panel"><h3>Nessuna attività</h3></article>`}</section>`,"DUCK "+duck.code);
+ <article class="card table">
+ ${[["Codice",duck.code],["Nave",ship],["Ultimo luogo",duck.current_place||"—"],["Stato",statusLabel(duck.status)],["Creata",fmtDate(duck.created_at)]]
+   .map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}
+ ${holderLine}
+ </article>
+
+ <div class="duck-choice-grid">
+   <button id="keepDuck" class="duck-choice keep" ${duck.status==="kept"?"disabled":""}>
+     ♥ ${duck.status==="kept"?"Duck già tenuta":"La tengo"}
+   </button>
+   <button id="hideDuck" class="duck-choice hide">⌖ La nascondo di nuovo</button>
+ </div>
+
+ <section class="section"><div class="section-head"><h2>QR CODE</h2></div>
+ <article class="card mini-qr-card"><img src="${qrImageUrl(duckUrl(duck.code))}">
+ <div><strong>${escapeHtml(duck.code)}</strong><p class="small">QR permanente collegato alla scheda online.</p></div></article></section>
+
+ <section class="section"><div class="section-head"><h2>CRONOLOGIA</h2></div>
+ ${events?.length ? events.map(e=>`
+   <article class="card history-row">
+     <div class="history-dot">•</div>
+     <div>
+       <strong>${escapeHtml(statusLabel(e.event_type))}${e.actor_name?` · ${escapeHtml(e.actor_name)}`:""}</strong>
+       <div class="small">${fmtDate(e.created_at)} · ${escapeHtml(e.place||"")}${e.actor_country?` · ${escapeHtml(e.actor_country)}`:""}</div>
+       ${e.event_note?`<div class="event-note">${escapeHtml(e.event_note)}</div>`:""}
+     </div>
+   </article>`).join("")
+ : `<article class="card empty-panel"><h3>Nessuna attività</h3></article>`}
+ </section>`,"DUCK "+duck.code);
+
  document.getElementById("backDuckList").onclick=()=>{history.replaceState({},"",location.pathname);duckSection()};
- document.getElementById("keepDuck").onclick=()=>duckAction(duck.code,"kept",duck.current_ship_slug,duck.current_place);
+ const keepBtn=document.getElementById("keepDuck");
+ if(keepBtn && duck.status!=="kept") keepBtn.onclick=()=>duckKeepConfirm(duck);
  document.getElementById("hideDuck").onclick=()=>duckRehide(duck.code,duck.current_ship_slug);
 }
 
-async function duckAction(code,eventType,shipSlug,place){
- const {error}=await db.rpc("record_duck_action",{p_code:code,p_event_type:eventType,p_ship_slug:shipSlug,p_place:place});
- if(error){alert("Operazione non disponibile: "+error.message);return;}
- await refreshDuckCounts(); duckDetail(code);
+function duckKeepConfirm(duck){
+ shell(`<button class="back" id="backDetail">← Duck</button>
+ <div class="section-head"><div><h1>LA TENGO</h1><p class="small">Conferma che vuoi tenere ${escapeHtml(duck.name)}.</p></div></div>
+
+ <article class="card">
+   <div class="confirm-banner">
+     <img src="duck.svg">
+     <div><strong>${escapeHtml(duck.name)}</strong><div class="small">${escapeHtml(duck.code)}</div></div>
+   </div>
+
+   <div class="form">
+     <label>Nome o nickname <span class="required">*</span>
+       <input id="keepName" class="field" maxlength="40" placeholder="Es. Marco">
+     </label>
+     <label>Città / Paese <span class="optional">facoltativo</span>
+       <input id="keepCountry" class="field" maxlength="60" placeholder="Es. Brescia, Italia">
+     </label>
+     <label>Nota <span class="optional">facoltativa</span>
+       <textarea id="keepNote" class="field" rows="3" maxlength="180" placeholder="Es. La porterò sulla prossima crociera"></textarea>
+     </label>
+
+     <div class="privacy-note">Queste informazioni saranno visibili nella cronologia pubblica della Duck. Non inserire email, telefono o altri dati sensibili.</div>
+     <button id="confirmKeep" class="duck-choice keep full">♥ Sì, tengo questa Duck</button>
+   </div>
+ </article>`,"CONFERMA DUCK");
+
+ document.getElementById("backDetail").onclick=()=>duckDetail(duck.code);
+
+ document.getElementById("confirmKeep").onclick=async()=>{
+   const btn=document.getElementById("confirmKeep");
+   const name=document.getElementById("keepName").value.trim();
+   const country=document.getElementById("keepCountry").value.trim();
+   const note=document.getElementById("keepNote").value.trim();
+
+   if(!name){alert("Inserisci almeno un nome o nickname.");return;}
+
+   btn.disabled=true;
+   btn.textContent="Salvataggio...";
+
+   const ok=await duckAction(
+     duck.code,
+     "kept",
+     duck.current_ship_slug,
+     duck.current_place,
+     name,
+     country,
+     note
+   );
+
+   if(!ok){
+     btn.disabled=false;
+     btn.textContent="♥ Sì, tengo questa Duck";
+   }
+ };
 }
+
+async function duckAction(code,eventType,shipSlug,place,actorName="",actorCountry="",eventNote=""){
+ const {error}=await db.rpc("record_duck_action",{
+   p_code:code,
+   p_event_type:eventType,
+   p_ship_slug:shipSlug,
+   p_place:place,
+   p_actor_name:actorName || null,
+   p_actor_country:actorCountry || null,
+   p_event_note:eventNote || null
+ });
+
+ if(error){
+   const msg=(error.message||"").toLowerCase();
+   if(msg.includes("già") || msg.includes("already")){
+     alert("Questa azione è già stata registrata.");
+     await duckDetail(code);
+     return false;
+   }
+   alert("Operazione non disponibile: "+error.message);
+   return false;
+ }
+
+ await refreshDuckCounts();
+ await duckDetail(code);
+ return true;
+}
+
 function duckRehide(code,currentShip){
  const opts=ships.map(s=>`<option value="${escapeHtml(s.dbslug||slug(s.name))}" ${(s.dbslug||slug(s.name))===currentShip?"selected":""}>${escapeHtml(s.name)}</option>`).join("");
- shell(`<button class="back" id="backDetail">← Duck</button><h1>NASCONDI DI NUOVO</h1><article class="card"><div class="form"><label>Nave<select id="rehideShip" class="field">${opts}</select></label><label>Nuovo luogo<input id="rehidePlace" class="field" placeholder="Scrivi il luogo manualmente"></label><button id="saveRehide" class="primary full">Conferma nascondimento</button></div></article>`,"NASCONDI DUCK");
+
+ shell(`<button class="back" id="backDetail">← Duck</button>
+ <h1>NASCONDI DI NUOVO</h1>
+
+ <article class="card"><div class="form">
+   <label>Nave
+     <select id="rehideShip" class="field">${opts}</select>
+   </label>
+
+   <label>Nuovo nascondiglio <span class="required">*</span>
+     <input id="rehidePlace" class="field" placeholder="Es. Ponte 8, vicino agli ascensori">
+   </label>
+
+   <label>Nome o nickname <span class="required">*</span>
+     <input id="rehideName" class="field" maxlength="40" placeholder="Es. Marco">
+   </label>
+
+   <label>Città / Paese <span class="optional">facoltativo</span>
+     <input id="rehideCountry" class="field" maxlength="60" placeholder="Es. Brescia, Italia">
+   </label>
+
+   <label>Nota <span class="optional">facoltativa</span>
+     <textarea id="rehideNote" class="field" rows="3" maxlength="180" placeholder="Es. Nascosta vicino alla libreria"></textarea>
+   </label>
+
+   <div class="privacy-note">Nome/nickname, città/Paese e nota saranno visibili nella cronologia pubblica della Duck.</div>
+   <button id="saveRehide" class="primary full">Conferma nascondiglio</button>
+ </div></article>`,"NASCONDI DUCK");
+
  document.getElementById("backDetail").onclick=()=>duckDetail(code);
- document.getElementById("saveRehide").onclick=()=>{
+
+ document.getElementById("saveRehide").onclick=async()=>{
+   const btn=document.getElementById("saveRehide");
    const place=document.getElementById("rehidePlace").value.trim();
-   if(!place){alert("Inserisci il nuovo luogo.");return;}
-   duckAction(code,"hidden",document.getElementById("rehideShip").value,place);
+   const name=document.getElementById("rehideName").value.trim();
+   const country=document.getElementById("rehideCountry").value.trim();
+   const note=document.getElementById("rehideNote").value.trim();
+
+   if(!place){alert("Inserisci il nuovo nascondiglio.");return;}
+   if(!name){alert("Inserisci almeno un nome o nickname.");return;}
+
+   btn.disabled=true;
+   btn.textContent="Salvataggio...";
+
+   const ok=await duckAction(
+     code,
+     "hidden",
+     document.getElementById("rehideShip").value,
+     place,
+     name,
+     country,
+     note
+   );
+
+   if(!ok){
+     btn.disabled=false;
+     btn.textContent="Conferma nascondiglio";
+   }
  };
 }
 function duckNotFound(code){
