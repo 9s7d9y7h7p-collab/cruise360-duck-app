@@ -194,3 +194,8 @@ label{display:grid;gap:6px;font-weight:700}
   .ship-hero-card .ship-detail-meraviglia{object-position:50% 72%;transform:scale(1.10)}
   .ship-hero-card .ship-detail-armonia{object-position:50% 34%;transform:none}
 }
+
+.empty-panel{text-align:center;padding:26px 18px}
+.empty-panel img{width:92px;height:72px;object-fit:contain;margin:0 auto 8px}
+.empty-panel h3{margin:4px 0 6px}.empty-panel p{max-width:430px;margin:0 auto;color:var(--muted);line-height:1.5}
+.history-icon{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:#0A345F;font-size:2rem;color:var(--cyan)}
