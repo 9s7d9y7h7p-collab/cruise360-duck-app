@@ -229,6 +229,8 @@ const I18N={
 ,"Questo account non è amministratore.":{en:"This account is not an administrator.",fr:"Ce compte n’est pas administrateur.",es:"Esta cuenta no es administradora.",de:"Dieses Konto ist kein Administrator."}
 ,"Torna al profilo":{en:"Back to profile",fr:"Retour au profil",es:"Volver al perfil",de:"Zurück zum Profil"}
 
+,"Scegli la lingua dell'app":{en:"Choose the app language",fr:"Choisissez la langue de l’application",es:"Elige el idioma de la aplicación",de:"Wähle die Sprache der App"}
+
 };
 
 function tr(text){
@@ -308,7 +310,8 @@ function openAppMenu(){
  overlay.id="appMenuOverlay";
  overlay.className="app-menu-overlay";
  overlay.innerHTML=`<div class="app-menu-panel">
-   <div class="app-menu-head"><strong>Cruise360Travel</strong><button id="closeAppMenu" class="menu-close">×</button></div>
+   <div class="app-menu-head"><div><strong>${tr("Lingua")}</strong><div class="menu-subtitle">Cruise360Travel</div></div><button id="closeAppMenu" class="menu-close">×</button></div>
+   <div class="menu-language-hint"><span>🌐</span><div><b>${tr("Lingua")}</b><small>${tr("Scegli la lingua dell'app")}</small></div></div>
    <div class="menu-label">${tr("Lingua")}</div>
    <div class="language-list">${SUPPORTED_LANGS.map(code=>`<button class="language-btn ${code===currentLang?"active":""}" data-lang="${code}"><span>${LANG_INFO[code].flag}</span><b>${LANG_INFO[code].label}</b>${code===currentLang?"✓":""}</button>`).join("")}</div>
  </div>`;
@@ -367,7 +370,12 @@ function shell(content,title="CRUISE360TRAVEL"){
  app.innerHTML=`<div class="app">
   <header class="topbar">
    <div class="brand"><img src="logo.jpeg" alt="Cruise360Travel"><strong>${escapeHtml(title)}</strong></div>
-   <button class="icon-btn" aria-label="Menu">☰</button>
+   <button class="icon-btn language-trigger" aria-label="Lingua" title="Lingua">
+     <span class="language-globe">🌐</span>
+     <span class="language-current">${LANG_INFO[currentLang].flag}</span>
+     <span class="language-code">${currentLang.toUpperCase()}</span>
+     <span class="language-chevron">⌄</span>
+   </button>
   </header>
   <main>${content}</main>${nav()}</div>`;
  document.documentElement.lang=currentLang;
