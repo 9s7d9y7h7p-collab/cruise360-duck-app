@@ -229,6 +229,36 @@ const I18N={
 ,"Questo account non è amministratore.":{en:"This account is not an administrator.",fr:"Ce compte n’est pas administrateur.",es:"Esta cuenta no es administradora.",de:"Dieses Konto ist kein Administrator."}
 ,"Torna al profilo":{en:"Back to profile",fr:"Retour au profil",es:"Volver al perfil",de:"Zurück zum Profil"}
 
+,"Scegli la lingua dell'app":{en:"Choose the app language",fr:"Choisissez la langue de l’application",es:"Elige el idioma de la aplicación",de:"Wähle die Sprache der App"}
+
+,"Cerca utenti...":{en:"Search users...",fr:"Rechercher des utilisateurs...",es:"Buscar usuarios...",de:"Benutzer suchen..."}
+,"Cerca Duck...":{en:"Search Ducks...",fr:"Rechercher des Ducks...",es:"Buscar Ducks...",de:"Ducks suchen..."}
+,"Cerca crociere...":{en:"Search cruises...",fr:"Rechercher des croisières...",es:"Buscar cruceros...",de:"Kreuzfahrten suchen..."}
+,"Più recenti":{en:"Newest first",fr:"Plus récentes",es:"Más recientes",de:"Neueste zuerst"}
+,"Più vecchie":{en:"Oldest first",fr:"Plus anciennes",es:"Más antiguas",de:"Älteste zuerst"}
+,"Tutti gli stati":{en:"All statuses",fr:"Tous les statuts",es:"Todos los estados",de:"Alle Status"}
+,"Risultati":{en:"Results",fr:"Résultats",es:"Resultados",de:"Ergebnisse"}
+,"Nessun risultato":{en:"No results",fr:"Aucun résultat",es:"Sin resultados",de:"Keine Ergebnisse"}
+
+,"Città del creatore":{en:"Creator city",fr:"Ville du créateur",es:"Ciudad del creador",de:"Stadt des Erstellers"}
+,"Es. Trenzano (BS)":{en:"e.g. London",fr:"Ex. Lyon",es:"Ej. Madrid",de:"z. B. Berlin"}
+,"Nickname del creatore":{en:"Creator nickname",fr:"Pseudo du créateur",es:"Apodo del creador",de:"Nickname des Erstellers"}
+,"Inserisci nickname e città del creatore.":{en:"Enter the creator nickname and city.",fr:"Saisissez le pseudo et la ville du créateur.",es:"Introduce el apodo y la ciudad del creador.",de:"Gib Nickname und Stadt des Erstellers ein."}
+,"Bigliettino Duck":{en:"Duck card",fr:"Carte Duck",es:"Tarjeta Duck",de:"Duck-Kärtchen"}
+,"Crea bigliettino":{en:"Create printable card",fr:"Créer la carte imprimable",es:"Crear tarjeta imprimible",de:"Druckkarte erstellen"}
+,"BIGLIETTINO DUCK":{en:"DUCK CARD",fr:"CARTE DUCK",es:"TARJETA DUCK",de:"DUCK-KÄRTCHEN"}
+,"Anteprima pronta per la stampa":{en:"Print-ready preview",fr:"Aperçu prêt à imprimer",es:"Vista previa lista para imprimir",de:"Druckfertige Vorschau"}
+,"CREATA DA":{en:"CREATED BY",fr:"CRÉÉE PAR",es:"CREADA POR",de:"ERSTELLT VON"}
+,"CITTÀ":{en:"CITY",fr:"VILLE",es:"CIUDAD",de:"STADT"}
+,"DATA":{en:"DATE",fr:"DATE",es:"FECHA",de:"DATUM"}
+,"NAVE":{en:"SHIP",fr:"NAVIRE",es:"BARCO",de:"SCHIFF"}
+,"CODICE DUCK":{en:"DUCK CODE",fr:"CODE DUCK",es:"CÓDIGO DUCK",de:"DUCK-CODE"}
+,"Scansiona il QR e continua il viaggio di questa Duck!":{en:"Scan the QR and continue this Duck's journey!",fr:"Scannez le QR et continuez le voyage de cette Duck !",es:"¡Escanea el QR y continúa el viaje de esta Duck!",de:"Scanne den QR-Code und setze die Reise dieser Duck fort!"}
+,"Stampa / Salva PDF":{en:"Print / Save PDF",fr:"Imprimer / Enregistrer en PDF",es:"Imprimir / Guardar PDF",de:"Drucken / Als PDF speichern"}
+,"Torna al QR":{en:"Back to QR",fr:"Retour au QR",es:"Volver al QR",de:"Zurück zum QR"}
+,"Formato 89 × 50 mm, fronte singolo.":{en:"89 × 50 mm, single-sided.",fr:"89 × 50 mm, recto uniquement.",es:"89 × 50 mm, una sola cara.",de:"89 × 50 mm, einseitig."}
+,"Il bigliettino usa automaticamente la lingua impostata nell'app.":{en:"The card automatically uses the language selected in the app.",fr:"La carte utilise automatiquement la langue choisie dans l’application.",es:"La tarjeta usa automáticamente el idioma seleccionado en la aplicación.",de:"Das Kärtchen verwendet automatisch die in der App gewählte Sprache."}
+
 };
 
 function tr(text){
@@ -308,7 +338,8 @@ function openAppMenu(){
  overlay.id="appMenuOverlay";
  overlay.className="app-menu-overlay";
  overlay.innerHTML=`<div class="app-menu-panel">
-   <div class="app-menu-head"><strong>Cruise360Travel</strong><button id="closeAppMenu" class="menu-close">×</button></div>
+   <div class="app-menu-head"><div><strong>${tr("Lingua")}</strong><div class="menu-subtitle">Cruise360Travel</div></div><button id="closeAppMenu" class="menu-close">×</button></div>
+   <div class="menu-language-hint"><span>🌐</span><div><b>${tr("Lingua")}</b><small>${tr("Scegli la lingua dell'app")}</small></div></div>
    <div class="menu-label">${tr("Lingua")}</div>
    <div class="language-list">${SUPPORTED_LANGS.map(code=>`<button class="language-btn ${code===currentLang?"active":""}" data-lang="${code}"><span>${LANG_INFO[code].flag}</span><b>${LANG_INFO[code].label}</b>${code===currentLang?"✓":""}</button>`).join("")}</div>
  </div>`;
@@ -367,7 +398,12 @@ function shell(content,title="CRUISE360TRAVEL"){
  app.innerHTML=`<div class="app">
   <header class="topbar">
    <div class="brand"><img src="logo.jpeg" alt="Cruise360Travel"><strong>${escapeHtml(title)}</strong></div>
-   <button class="icon-btn" aria-label="Menu">☰</button>
+   <button class="icon-btn language-trigger" aria-label="Lingua" title="Lingua">
+     <span class="language-globe">🌐</span>
+     <span class="language-current">${LANG_INFO[currentLang].flag}</span>
+     <span class="language-code">${currentLang.toUpperCase()}</span>
+     <span class="language-chevron">⌄</span>
+   </button>
   </header>
   <main>${content}</main>${nav()}</div>`;
  document.documentElement.lang=currentLang;
@@ -474,7 +510,7 @@ function duckUrl(code){
  return PUBLIC_APP_URL + "/?duck=" + encodeURIComponent(code);
 }
 function qrImageUrl(text){
- return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=" + encodeURIComponent(text);
+ return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&ecc=H&data=" + encodeURIComponent(text);
 }
 
 async function duckSection(){
@@ -501,31 +537,78 @@ async function duckSection(){
  document.querySelectorAll("[data-openduck]").forEach(x=>x.onclick=()=>duckDetail(x.dataset.openduck));
 }
 
-function duckCreate(){
+async function duckCreate(){
  const opts=ships.map(s=>`<option value="${escapeHtml(s.dbslug||slug(s.name))}">${escapeHtml(s.name)}</option>`).join("");
+ let profileRow=null;
+ if(currentUser){
+   const {data}=await db.from("profiles").select("username,display_name").eq("id",currentUser.id).maybeSingle();
+   profileRow=data||null;
+ }
+ const defaultNick=profileRow?.username||profileRow?.display_name||"";
+ const savedCity=localStorage.getItem("cruise360travel_creator_city")||"";
+
  shell(`<button class="back" id="backDuck">← Duck</button><div class="section-head"><div><h1>NUOVA DUCK</h1><p class="small">Il QR aprirà sempre la scheda online aggiornata.</p></div></div>
  <article class="card"><div class="form">
  <label>Nome della Duck<input id="dName" class="field" placeholder="Es. Sunny Explorer"></label>
+ <label>Nickname del creatore<input id="dCreatorNick" class="field" maxlength="40" value="${escapeHtml(defaultNick)}"></label>
+ <label>Città del creatore<input id="dCreatorCity" class="field" maxlength="60" placeholder="Es. Trenzano (BS)" value="${escapeHtml(savedCity)}"></label>
  <label>Nave<select id="dShip" class="field">${opts}</select></label>
  <label>Luogo iniziale<input id="dPlace" class="field" placeholder="Es. Ponte 8, vicino agli ascensori"></label>
  <label>Nota<textarea id="dNote" class="field" rows="3" placeholder="Facoltativa"></textarea></label>
  <button id="generateDuck" class="primary full">Crea Duck e genera QR</button>
  </div></article>`,"NUOVA DUCK");
+
  document.getElementById("backDuck").onclick=duckSection;
  document.getElementById("generateDuck").onclick=async()=>{
    const name=document.getElementById("dName").value.trim();
+   const creator_nickname=document.getElementById("dCreatorNick").value.trim();
+   const creator_city=document.getElementById("dCreatorCity").value.trim();
    const ship=document.getElementById("dShip").value;
    const place=document.getElementById("dPlace").value.trim();
    const note=document.getElementById("dNote").value.trim();
+
    if(!name||!place){alert("Compila nome Duck e luogo.");return;}
+   if(!creator_nickname||!creator_city){alert("Inserisci nickname e città del creatore.");return;}
+
+   localStorage.setItem("cruise360travel_creator_city",creator_city);
+
+   const btn=document.getElementById("generateDuck");
+   btn.disabled=true;
+   btn.textContent="Salvataggio...";
+
    let code,created,error;
    for(let i=0;i<5;i++){
      code=newDuckCode();
-     ({data:created,error}=await db.from("ducks").insert({code,name,created_by:currentUser.id,current_ship_slug:ship,current_place:place,status:"hidden",note}).select().single());
+     ({data:created,error}=await db.from("ducks").insert({
+       code,
+       name,
+       created_by:currentUser.id,
+       creator_nickname,
+       creator_city,
+       current_ship_slug:ship,
+       current_place:place,
+       status:"hidden",
+       note
+     }).select().single());
      if(!error) break;
    }
-   if(error){alert("Errore nella creazione della Duck: "+error.message);return;}
-   await db.from("duck_events").insert({duck_id:created.id,event_type:"created",ship_slug:ship,place,actor_id:currentUser.id});
+   if(error){
+     btn.disabled=false;
+     btn.textContent="Crea Duck e genera QR";
+     alert("Errore nella creazione della Duck: "+error.message);
+     return;
+   }
+
+   await db.from("duck_events").insert({
+     duck_id:created.id,
+     event_type:"created",
+     ship_slug:ship,
+     place,
+     actor_id:currentUser.id,
+     actor_name:creator_nickname,
+     actor_country:creator_city
+   });
+
    await refreshDuckCounts();
    duckQR(created);
  };
@@ -536,10 +619,58 @@ function duckQR(duck){
  const ship=ships.find(s=>(s.dbslug||slug(s.name))===duck.current_ship_slug)?.name||duck.current_ship_slug;
  shell(`<button class="back" id="backDuck">← Duck</button>
  <div class="qr-page"><div class="section-head"><div><h1>QR CODE CREATO</h1><p class="small">${escapeHtml(duck.name)}</p></div><span class="badge green">Online</span></div>
- <article class="card qr-card"><img class="qr-image" src="${qrImageUrl(url)}"><div class="qr-code-label">${escapeHtml(duck.code)}</div><p>Questo QR apre la scheda online della Duck da qualsiasi telefono.</p><button id="openDuck" class="primary full">Apri scheda Duck</button></article>
+ <article class="card qr-card"><img class="qr-image" src="${qrImageUrl(url)}"><div class="qr-code-label">${escapeHtml(duck.code)}</div><p>Questo QR apre la scheda online della Duck da qualsiasi telefono.</p><button id="openDuck" class="primary full">Apri scheda Duck</button><button id="createTicket" class="secondary full ticket-cta">Crea bigliettino</button></article>
  <article class="card table" style="margin-top:12px">${[["Nome",duck.name],["Codice",duck.code],["Nave",ship],["Luogo",duck.current_place],["Stato",statusLabel(duck.status)]].map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}</article></div>`,"QR DUCK");
  document.getElementById("backDuck").onclick=duckSection;
  document.getElementById("openDuck").onclick=()=>duckDetail(duck.code);
+ document.getElementById("createTicket").onclick=()=>duckTicket(duck);
+}
+
+function duckTicket(duck){
+ const ship=ships.find(s=>(s.dbslug||slug(s.name))===duck.current_ship_slug)?.name||duck.current_ship_slug||"—";
+ const nick=duck.creator_nickname||"—";
+ const city=duck.creator_city||"—";
+ const date=fmtDate(duck.created_at);
+ const qr=qrImageUrl(duckUrl(duck.code));
+
+ shell(`<button class="back no-print" id="ticketBack">← Torna al QR</button>
+ <div class="section-head no-print"><div><h1>BIGLIETTINO DUCK</h1><p class="small">Anteprima pronta per la stampa</p></div></div>
+
+ <div class="duck-ticket-wrap">
+   <div id="duckPrintableTicket" class="duck-print-ticket">
+     <div class="ticket-left">
+       <img class="ticket-brand-logo" src="ticket-logo.jpeg" alt="Cruise360Travel">
+       <div class="ticket-qr-wrap">
+         <img class="ticket-qr" src="${qr}" alt="QR ${escapeHtml(duck.code)}">
+         <span class="ticket-qr-logo"><img src="ticket-logo.jpeg" alt=""></span>
+       </div>
+       <div class="ticket-code"><span>CODICE DUCK</span><strong>${escapeHtml(duck.code)}</strong></div>
+     </div>
+
+     <div class="ticket-divider"></div>
+
+     <div class="ticket-right">
+       <div class="ticket-data-row"><span class="ticket-data-icon">👤</span><div><small>CREATA DA</small><strong>${escapeHtml(nick)}</strong></div></div>
+       <div class="ticket-data-row"><span class="ticket-data-icon">⌖</span><div><small>CITTÀ</small><strong>${escapeHtml(city)}</strong></div></div>
+       <div class="ticket-data-row"><span class="ticket-data-icon">▣</span><div><small>DATA</small><strong>${escapeHtml(date)}</strong></div></div>
+       <div class="ticket-data-row"><span class="ticket-data-icon">🚢</span><div><small>NAVE</small><strong>${escapeHtml(ship)}</strong></div></div>
+       <div class="ticket-message"><span>🦆</span><em>Scansiona il QR e continua il viaggio di questa Duck!</em></div>
+     </div>
+
+     <div class="ticket-instagram">◎ <strong>@cruise360travel</strong></div>
+   </div>
+ </div>
+
+ <section class="section no-print">
+   <article class="card ticket-info">
+     <p>Formato 89 × 50 mm, fronte singolo.</p>
+     <p>Il bigliettino usa automaticamente la lingua impostata nell'app.</p>
+     <button id="printTicket" class="primary full">Stampa / Salva PDF</button>
+   </article>
+ </section>`,"BIGLIETTINO DUCK");
+
+ document.getElementById("ticketBack").onclick=()=>duckQR(duck);
+ document.getElementById("printTicket").onclick=()=>window.print();
 }
 
 function duckFind(){
@@ -1028,19 +1159,20 @@ async function adminPanel(tab=state.adminTab||"overview"){
  ]);
 
  const firstError=usersError||ducksError||eventsError||cruisesError;
- if(firstError){
-   alert(firstError.message);
-   return;
- }
+ if(firstError){ alert(firstError.message); return; }
 
  const userMap={};
  (users||[]).forEach(u=>userMap[u.user_id]=u);
- const tabs=[
-   ["overview","PANORAMICA"],
-   ["users","UTENTI"],
-   ["ducks","DUCK"],
-   ["cruises","CROCIERE"]
- ];
+ const tabs=[["overview","PANORAMICA"],["users","UTENTI"],["ducks","DUCK"],["cruises","CROCIERE"]];
+
+ const q=(state.adminSearch||"").trim().toLowerCase();
+ const sort=state.adminSort||"new";
+ const duckStatus=state.adminDuckStatus||"all";
+
+ const sorted=(arr,dateKey="created_at")=>[...arr].sort((a,b)=>{
+   const av=new Date(a[dateKey]||0).getTime(), bv=new Date(b[dateKey]||0).getTime();
+   return sort==="old"?av-bv:bv-av;
+ });
 
  let content="";
  if(tab==="overview"){
@@ -1052,10 +1184,15 @@ async function adminPanel(tab=state.adminTab||"overview"){
      <article class="card admin-stat"><span>🚢</span><strong>${(cruises||[]).length}</strong><small>Crociere</small></article>
    </section>
    <section class="section"><div class="section-head"><h2>Ultime Duck</h2></div>
-     <div class="admin-list">${(ducks||[]).slice(0,6).map(d=>adminDuckCard(d,false)).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</div>
+     <div class="admin-list">${sorted(ducks||[]).slice(0,6).map(d=>adminDuckCard(d,false)).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</div>
    </section>`;
  } else if(tab==="users"){
-   content=`<section class="admin-list">${(users||[]).map(u=>`
+   const filtered=sorted(users||[]).filter(u=>{
+     const hay=[u.email,u.display_name,u.username].filter(Boolean).join(" ").toLowerCase();
+     return !q || hay.includes(q);
+   });
+   content=`${adminTools("users",filtered.length)}
+   <section class="admin-list">${filtered.map(u=>`
      <article class="card admin-user-card">
        <div class="admin-user-avatar">${escapeHtml((u.display_name||u.username||u.email||"?").slice(0,1).toUpperCase())}</div>
        <div class="grow">
@@ -1065,11 +1202,26 @@ async function adminPanel(tab=state.adminTab||"overview"){
          <div class="small">Registrato il ${fmtDate(u.created_at)}</div>
        </div>
        ${u.is_admin?`<span class="badge blue">Amministratore</span>`:""}
-     </article>`).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+     </article>`).join("") || `<article class="card empty-panel"><h3>Nessun risultato</h3></article>`}</section>`;
  } else if(tab==="ducks"){
-   content=`<section class="admin-list">${(ducks||[]).map(d=>adminDuckCard(d,true)).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+   const filtered=sorted(ducks||[]).filter(d=>{
+     const ship=ships.find(s=>(s.dbslug||slug(s.name))===d.current_ship_slug);
+     const hay=[d.name,d.code,d.current_place,d.status,ship?.name].filter(Boolean).join(" ").toLowerCase();
+     const matchesQ=!q || hay.includes(q);
+     const matchesStatus=duckStatus==="all" || d.status===duckStatus;
+     return matchesQ && matchesStatus;
+   });
+   content=`${adminTools("ducks",filtered.length)}
+   <section class="admin-list">${filtered.map(d=>adminDuckCard(d,true)).join("") || `<article class="card empty-panel"><h3>Nessun risultato</h3></article>`}</section>`;
  } else if(tab==="cruises"){
-   content=`<section class="admin-list">${(cruises||[]).map(c=>{
+   const filtered=sorted(cruises||[]).filter(c=>{
+     const ship=ships.find(s=>(s.dbslug||slug(s.name))===c.ship_slug);
+     const owner=userMap[c.user_id];
+     const hay=[ship?.name,c.ship_slug,owner?.email,owner?.display_name,owner?.username].filter(Boolean).join(" ").toLowerCase();
+     return !q || hay.includes(q);
+   });
+   content=`${adminTools("cruises",filtered.length)}
+   <section class="admin-list">${filtered.map(c=>{
      const ship=ships.find(s=>(s.dbslug||slug(s.name))===c.ship_slug);
      const owner=userMap[c.user_id];
      return `<article class="card admin-cruise-card">
@@ -1080,7 +1232,7 @@ async function adminPanel(tab=state.adminTab||"overview"){
        </div>
        <button class="text-danger admin-delete-cruise" data-admin-delete-cruise="${escapeHtml(c.id)}">Elimina crociera</button>
      </article>`;
-   }).join("") || `<article class="card empty-panel"><h3>Nessun dato disponibile</h3></article>`}</section>`;
+   }).join("") || `<article class="card empty-panel"><h3>Nessun risultato</h3></article>`}</section>`;
  }
 
  shell(`<button class="back" id="adminBackProfile">← Torna al profilo</button>
@@ -1090,10 +1242,37 @@ async function adminPanel(tab=state.adminTab||"overview"){
 
  document.getElementById("adminBackProfile").onclick=profile;
  document.getElementById("adminRefresh").onclick=()=>adminPanel(tab);
- document.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>adminPanel(b.dataset.adminTab));
+ document.querySelectorAll("[data-admin-tab]").forEach(b=>b.onclick=()=>{state.adminSearch="";state.adminDuckStatus="all";adminPanel(b.dataset.adminTab)});
+ const search=document.getElementById("adminSearch");
+ if(search){
+   search.oninput=()=>{state.adminSearch=search.value;adminPanel(tab)};
+   search.focus(); search.setSelectionRange(search.value.length,search.value.length);
+ }
+ const sortSel=document.getElementById("adminSort");
+ if(sortSel) sortSel.onchange=()=>{state.adminSort=sortSel.value;adminPanel(tab)};
+ const statusSel=document.getElementById("adminDuckStatus");
+ if(statusSel) statusSel.onchange=()=>{state.adminDuckStatus=statusSel.value;adminPanel(tab)};
  document.querySelectorAll("[data-admin-open-duck]").forEach(b=>b.onclick=()=>duckDetail(b.dataset.adminOpenDuck));
  document.querySelectorAll("[data-admin-delete-duck]").forEach(b=>b.onclick=()=>adminDeleteDuck(b.dataset.adminDeleteDuck));
  document.querySelectorAll("[data-admin-delete-cruise]").forEach(b=>b.onclick=()=>adminDeleteCruise(b.dataset.adminDeleteCruise));
+}
+
+function adminTools(tab,count){
+ const placeholder=tab==="users"?"Cerca utenti...":tab==="ducks"?"Cerca Duck...":"Cerca crociere...";
+ return `<div class="admin-tools">
+   <input id="adminSearch" class="field admin-search" placeholder="${placeholder}" value="${escapeHtml(state.adminSearch||"")}">
+   <select id="adminSort" class="field admin-sort">
+     <option value="new" ${(state.adminSort||"new")==="new"?"selected":""}>Più recenti</option>
+     <option value="old" ${state.adminSort==="old"?"selected":""}>Più vecchie</option>
+   </select>
+   ${tab==="ducks"?`<select id="adminDuckStatus" class="field admin-sort">
+     <option value="all" ${(state.adminDuckStatus||"all")==="all"?"selected":""}>Tutti gli stati</option>
+     <option value="hidden" ${state.adminDuckStatus==="hidden"?"selected":""}>Nascosta</option>
+     <option value="kept" ${state.adminDuckStatus==="kept"?"selected":""}>Tenuta</option>
+     <option value="found" ${state.adminDuckStatus==="found"?"selected":""}>Trovata</option>
+   </select>`:""}
+   <div class="admin-result-count">${tr("Risultati")}: <strong>${count}</strong></div>
+ </div>`;
 }
 
 function adminDuckCard(d,showDelete=true){
