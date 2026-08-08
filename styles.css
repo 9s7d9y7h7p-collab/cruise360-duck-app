@@ -218,3 +218,11 @@ textarea.field{resize:vertical;min-height:88px}
 
 .full{width:100%}
 .profile-avatar{width:92px;height:92px;object-fit:cover;border-radius:50%;border:2px solid var(--line)}
+
+.duck-choice:disabled,.primary:disabled,.secondary:disabled{opacity:.5;cursor:not-allowed}
+.confirm-banner{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:12px;border-radius:16px;background:rgba(13,129,255,.08);border:1px solid var(--line)}
+.confirm-banner img{width:64px;height:64px;object-fit:contain}
+.required{color:#ffbd59}
+.optional{font-size:.8em;opacity:.6;font-weight:400}
+.privacy-note{font-size:.82rem;line-height:1.45;color:var(--muted);padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.event-note{margin-top:5px;font-size:.86rem;line-height:1.35;opacity:.86}
