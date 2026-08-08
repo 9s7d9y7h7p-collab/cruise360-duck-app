@@ -146,8 +146,9 @@ function newDuckCode(){
  for(let i=0;i<6;i++) out+=chars[Math.floor(Math.random()*chars.length)];
  return out;
 }
+const PUBLIC_APP_URL = "https://cruise360-duck-app.vercel.app";
 function duckUrl(code){
- return location.origin + location.pathname + "?duck=" + encodeURIComponent(code);
+ return PUBLIC_APP_URL + "/?duck=" + encodeURIComponent(code);
 }
 function qrImageUrl(text){
  return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=" + encodeURIComponent(text);
