@@ -16,7 +16,8 @@ function nav(){return `<nav class="navbar"><div class="navinner">${[
  ["home","⌂","Home"],["fleet","🚢","Flotta"],["duckSearch","🦆","Duck"],["profile","👤","Profilo"],["badges","♡","Badge"]
 ].map(x=>`<button class="navbtn ${state.view===x[0]?"active":""}" data-go="${x[0]}"><b>${x[1]}</b>${x[2]}</button>`).join("")}</div></nav>`}
 function bind(){document.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>go(x.dataset.go))}
-function go(v){state.view=v;render();window.scrollTo({top:0,behavior:"smooth"})}
+function go(v){state.view=v;const initialDuck=new URLSearchParams(location.search).get("duck");
+if(initialDuck){duckDetail(initialDuck);}else{render();}window.scrollTo({top:0,behavior:"smooth"})}
 
 function home(){
  shell(`<section class="hero"><img src="seashore.jpeg" alt="MSC Seashore"><div class="hero-copy"><h1>Benvenuto a bordo,<br>Nicola!</h1><p>La tua avventura inizia qui.</p></div></section>
@@ -77,12 +78,224 @@ function ship(){
  </div></section>${panel}`,s.name);
  document.querySelectorAll("[data-shiptab]").forEach(b=>b.onclick=()=>{state.shipTab=b.dataset.shiptab;ship()});
 }
+
+function loadDucks(){
+  try { return JSON.parse(localStorage.getItem("cruise360_ducks") || "[]"); }
+  catch(e){ return []; }
+}
+function saveDucks(list){
+  localStorage.setItem("cruise360_ducks", JSON.stringify(list));
+}
+function newDuckCode(){
+  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out="C360-";
+  for(let i=0;i<6;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+function escapeHtml(v){
+  return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+}
+function duckUrl(code){
+  return location.origin + location.pathname + "?duck=" + encodeURIComponent(code);
+}
+function qrImageUrl(text){
+  return "https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=" + encodeURIComponent(text);
+}
+function duckSection(){
+ const saved=loadDucks();
+ shell(`
+   <div class="section-head">
+     <div><h1 style="margin-bottom:4px">DUCK</h1><p class="small">Registra, genera il QR e segui ogni Cruise Duck.</p></div>
+   </div>
+
+   <div class="duck-actions-grid">
+     <article class="card duck-action" data-duckaction="create">
+       <div class="duck-action-icon">＋</div>
+       <div><h3>Crea una nuova Duck</h3><p>Inserisci i dati e genera il QR univoco.</p></div>
+     </article>
+     <article class="card duck-action" data-duckaction="find">
+       <div class="duck-action-icon">⌕</div>
+       <div><h3>Trova una Duck</h3><p>Apri una Duck tramite il suo codice.</p></div>
+     </article>
+   </div>
+
+   <section class="section">
+     <div class="section-head"><h2>LE MIE DUCK</h2><span class="badge blue">${saved.length}</span></div>
+     <div class="duck-saved-list">
+       ${saved.length ? saved.map(d=>`
+         <article class="card saved-duck" data-openduck="${escapeHtml(d.code)}">
+           <img src="duck.svg" alt="Duck">
+           <div class="grow">
+             <strong>${escapeHtml(d.name || d.code)}</strong>
+             <div class="small">${escapeHtml(d.code)} · ${escapeHtml(d.ship)}</div>
+           </div>
+           <span class="ship-chevron">›</span>
+         </article>`).join("") :
+         `<article class="card empty-panel"><img src="duck.svg" alt="Duck"><h3>Nessuna Duck creata</h3><p>Crea la prima Duck e genera il suo QR code.</p></article>`}
+     </div>
+   </section>
+ `,"DUCK");
+ document.querySelectorAll("[data-duckaction]").forEach(b=>b.onclick=()=> {
+   if(b.dataset.duckaction==="create") duckCreate();
+   else duckFind();
+ });
+ document.querySelectorAll("[data-openduck]").forEach(b=>b.onclick=()=>duckDetail(b.dataset.openduck));
+}
+function duckCreate(){
+ const shipOptions=ships.map(s=>`<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)}</option>`).join("");
+ shell(`
+   <button class="back" id="backDuck">← Duck</button>
+   <div class="section-head"><div><h1>NUOVA DUCK</h1><p class="small">Il QR conterrà un link univoco alla scheda della Duck.</p></div></div>
+   <article class="card">
+     <div class="form">
+       <label>Nome della Duck<input id="dName" class="field" placeholder="Es. Sunny Explorer"></label>
+       <label>Nave<select id="dShip" class="field">${shipOptions}</select></label>
+       <label>Autore<input id="dAuthor" class="field" placeholder="Nome o username"></label>
+       <label>Data<input id="dDate" class="field" type="date"></label>
+       <label>Luogo iniziale<input id="dPlace" class="field" placeholder="Es. Ponte 8, vicino agli ascensori"></label>
+       <label>Nota<textarea id="dNote" class="field" rows="3" placeholder="Facoltativa"></textarea></label>
+       <button id="generateDuck" class="primary full">Genera Duck e QR code</button>
+     </div>
+   </article>
+   <div class="notice" style="margin-top:12px"><strong>Perché il QR contiene solo il link?</strong><br>Così puoi aggiornare nave, luogo, stato e cronologia senza dover ristampare il QR.</div>
+ `,"NUOVA DUCK");
+ document.getElementById("backDuck").onclick=duckSection;
+ const dateInput=document.getElementById("dDate");
+ dateInput.value=new Date().toISOString().slice(0,10);
+ document.getElementById("generateDuck").onclick=()=>{
+   const name=document.getElementById("dName").value.trim();
+   const ship=document.getElementById("dShip").value;
+   const author=document.getElementById("dAuthor").value.trim();
+   const date=document.getElementById("dDate").value;
+   const place=document.getElementById("dPlace").value.trim();
+   const note=document.getElementById("dNote").value.trim();
+   if(!name || !author || !place){ alert("Compila almeno nome Duck, autore e luogo."); return; }
+   const code=newDuckCode();
+   const duck={code,name,ship,author,date,place,note,status:"Nascosta",history:[{type:"Creata e nascosta",date,place,ship,by:author}]};
+   const list=loadDucks(); list.unshift(duck); saveDucks(list);
+   duckQR(duck);
+ };
+}
+function duckQR(duck){
+ const url=duckUrl(duck.code);
+ shell(`
+   <button class="back" id="backToDuck">← Duck</button>
+   <div class="qr-page">
+     <div class="section-head"><div><h1>QR CODE CREATO</h1><p class="small">${escapeHtml(duck.name)}</p></div><span class="badge green">Pronto</span></div>
+     <article class="card qr-card">
+       <img class="qr-image" src="${qrImageUrl(url)}" alt="QR ${escapeHtml(duck.code)}">
+       <div class="qr-code-label">${escapeHtml(duck.code)}</div>
+       <p>Scansionando questo QR si apre direttamente la scheda della Duck.</p>
+       <button id="openDuckNow" class="primary full">Apri scheda Duck</button>
+     </article>
+     <article class="card table" style="margin-top:12px">
+       ${[["Nome",duck.name],["Codice",duck.code],["Nave",duck.ship],["Autore",duck.author],["Data",duck.date],["Luogo",duck.place],["Stato",duck.status]].map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}
+     </article>
+   </div>
+ `,"QR DUCK");
+ document.getElementById("backToDuck").onclick=duckSection;
+ document.getElementById("openDuckNow").onclick=()=>duckDetail(duck.code);
+}
+function duckFind(){
+ shell(`
+   <button class="back" id="backDuck">← Duck</button>
+   <h1>TROVA DUCK</h1>
+   <article class="card"><div class="form">
+     <label>Codice Duck<input id="findCode" class="field" placeholder="C360-XXXXXX"></label>
+     <button id="findDuckBtn" class="primary full">Apri Duck</button>
+   </div></article>
+ `,"TROVA DUCK");
+ document.getElementById("backDuck").onclick=duckSection;
+ document.getElementById("findDuckBtn").onclick=()=>{
+   const code=document.getElementById("findCode").value.trim().toUpperCase();
+   const d=loadDucks().find(x=>x.code===code);
+   if(!d){ alert("Duck non trovata su questo dispositivo."); return; }
+   duckDetail(code);
+ };
+}
+function duckDetail(code){
+ const duck=loadDucks().find(x=>x.code===code);
+ if(!duck){ duckNotFound(code); return; }
+ shell(`
+   <button class="back" id="backDuckList">← Duck</button>
+   <div class="duck-detail-hero">
+     <img src="duck.svg" alt="Duck">
+     <div><span class="badge green">${escapeHtml(duck.status)}</span><h1>${escapeHtml(duck.name)}</h1><div class="small">${escapeHtml(duck.code)}</div></div>
+   </div>
+
+   <article class="card table">
+     ${[["Codice",duck.code],["Creata da",duck.author],["Data creazione",duck.date],["Nave",duck.ship],["Ultimo luogo",duck.place],["Stato",duck.status]].map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}
+   </article>
+
+   <div class="duck-choice-grid">
+     <button id="keepDuck" class="duck-choice keep">♥ La tengo</button>
+     <button id="hideDuck" class="duck-choice hide">⌖ La nascondo di nuovo</button>
+   </div>
+
+   <section class="section">
+     <div class="section-head"><h2>QR CODE</h2></div>
+     <article class="card mini-qr-card">
+       <img src="${qrImageUrl(duckUrl(duck.code))}" alt="QR ${escapeHtml(duck.code)}">
+       <div><strong>${escapeHtml(duck.code)}</strong><p class="small">QR permanente collegato a questa Duck.</p></div>
+     </article>
+   </section>
+
+   <section class="section">
+     <div class="section-head"><h2>CRONOLOGIA</h2></div>
+     <div class="history-list">
+       ${(duck.history||[]).slice().reverse().map(h=>`<article class="card history-row"><div class="history-dot">•</div><div><strong>${escapeHtml(h.type)}</strong><div class="small">${escapeHtml(h.date)} · ${escapeHtml(h.ship)} · ${escapeHtml(h.place)}</div></div></article>`).join("")}
+     </div>
+   </section>
+ `,"DUCK "+duck.code);
+ document.getElementById("backDuckList").onclick=duckSection;
+ document.getElementById("keepDuck").onclick=()=>{
+   updateDuckAction(duck.code,"Tenuta","La tengo",duck.place);
+ };
+ document.getElementById("hideDuck").onclick=()=>duckRehide(duck.code);
+}
+function duckRehide(code){
+ const duck=loadDucks().find(x=>x.code===code);
+ shell(`
+   <button class="back" id="backDetail">← Duck</button>
+   <h1>NASCONDI DI NUOVO</h1>
+   <article class="card"><div class="form">
+     <label>Nave<select id="rehideShip" class="field">${ships.map(s=>`<option ${s.name===duck.ship?"selected":""}>${escapeHtml(s.name)}</option>`).join("")}</select></label>
+     <label>Nuovo luogo<input id="rehidePlace" class="field" placeholder="Scrivi il luogo manualmente"></label>
+     <button id="saveRehide" class="primary full">Conferma nascondimento</button>
+   </div></article>
+ `,"NASCONDI DUCK");
+ document.getElementById("backDetail").onclick=()=>duckDetail(code);
+ document.getElementById("saveRehide").onclick=()=>{
+   const place=document.getElementById("rehidePlace").value.trim();
+   const ship=document.getElementById("rehideShip").value;
+   if(!place){alert("Inserisci il nuovo luogo.");return;}
+   updateDuckAction(code,"Nascosta","Nascosta di nuovo",place,ship);
+ };
+}
+function updateDuckAction(code,status,type,place,ship){
+ const list=loadDucks();
+ const idx=list.findIndex(x=>x.code===code);
+ if(idx<0)return;
+ const today=new Date().toISOString().slice(0,10);
+ list[idx].status=status;
+ if(place) list[idx].place=place;
+ if(ship) list[idx].ship=ship;
+ list[idx].history=list[idx].history||[];
+ list[idx].history.push({type,date:today,place:list[idx].place,ship:list[idx].ship,by:"Utente"});
+ saveDucks(list);
+ duckDetail(code);
+}
+function duckNotFound(code){
+ shell(`<div class="center" style="padding:40px 0"><img src="duck.svg" style="width:100px"><h1>Duck non trovata</h1><p class="small">${escapeHtml(code||"")}</p><div style="height:14px"></div><button class="secondary" id="goHomeDuck">Vai alla sezione Duck</button></div>`,"DUCK");
+ document.getElementById("goHomeDuck").onclick=duckSection;
+}
+
 function placeholder(title){shell(`<div class="center" style="padding:40px 0"><h1>${title}</h1><p class="small">Questa sezione verrà collegata nella fase successiva.</p></div>`,title)}
 function render(){
  if(state.view==="home")return home();
  if(state.view==="fleet")return fleet();
  if(state.view==="ship")return ship();
- if(state.view==="duckSearch")return placeholder("DUCK");
+ if(state.view==="duckSearch")return duckSection();
  if(state.view==="profile")return placeholder("PROFILO");
  if(state.view==="badges")return placeholder("BADGE");
  home();

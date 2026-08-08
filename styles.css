@@ -199,3 +199,19 @@ label{display:grid;gap:6px;font-weight:700}
 .empty-panel img{width:92px;height:72px;object-fit:contain;margin:0 auto 8px}
 .empty-panel h3{margin:4px 0 6px}.empty-panel p{max-width:430px;margin:0 auto;color:var(--muted);line-height:1.5}
 .history-icon{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;background:#0A345F;font-size:2rem;color:var(--cyan)}
+
+.duck-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.duck-action{display:flex;align-items:center;gap:12px;cursor:pointer}
+.duck-action-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:#0A345F;color:var(--cyan);font-size:1.7rem;font-weight:700}
+.saved-duck{display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer}
+.saved-duck img{width:58px;height:46px;object-fit:contain}.saved-duck .grow{flex:1}
+.qr-page{max-width:650px;margin:0 auto}.qr-card{text-align:center}
+.qr-image{width:min(320px,82vw);background:#fff;border-radius:18px;padding:12px;margin:4px auto 12px}
+.qr-code-label{font-size:1.25rem;font-weight:800;letter-spacing:.08em;margin-bottom:8px}
+.duck-detail-hero{display:flex;align-items:center;gap:16px;padding:18px 4px}.duck-detail-hero img{width:110px;height:88px;object-fit:contain}.duck-detail-hero h1{margin:6px 0 2px}
+.duck-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.duck-choice{border:0;border-radius:14px;padding:15px 12px;color:#fff;font-weight:800;font-size:1rem}.duck-choice.keep{background:#2F9E44}.duck-choice.hide{background:#1769D2}
+.mini-qr-card{display:flex;align-items:center;gap:14px}.mini-qr-card img{width:110px;background:#fff;border-radius:12px;padding:6px}
+.history-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:9px}.history-dot{color:var(--cyan);font-size:1.5rem;line-height:1}
+textarea.field{resize:vertical;min-height:88px}
+@media(max-width:520px){.duck-actions-grid,.duck-choice-grid{grid-template-columns:1fr}.mini-qr-card{align-items:flex-start}}
