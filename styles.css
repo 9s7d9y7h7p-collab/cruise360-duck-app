@@ -226,3 +226,15 @@ textarea.field{resize:vertical;min-height:88px}
 .optional{font-size:.8em;opacity:.6;font-weight:400}
 .privacy-note{font-size:.82rem;line-height:1.45;color:var(--muted);padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
 .event-note{margin-top:5px;font-size:.86rem;line-height:1.35;opacity:.86}
+
+.guest-invite-section{margin-top:14px}
+.guest-invite-card{display:grid;gap:12px;text-align:left}
+.guest-invite-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:rgba(39,145,255,.14);font-size:1.55rem}
+.guest-invite-copy h3{margin:0 0 6px}
+.guest-invite-copy p{margin:0;color:var(--muted);line-height:1.45}
+.guest-success{text-align:center;padding:24px 0}
+.guest-success-icon{width:70px;height:70px;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(47,201,92,.18);font-size:2rem;font-weight:800}
+.guest-invite-after{margin-top:22px;text-align:left}
+.invite-profile-banner{margin:0 0 18px;padding:15px;border-radius:16px;background:rgba(39,145,255,.10);border:1px solid var(--line)}
+.invite-profile-banner strong{display:block;margin-bottom:4px}
+.invite-profile-banner p{margin:0;color:var(--muted)}

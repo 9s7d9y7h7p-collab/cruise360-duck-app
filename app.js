@@ -258,6 +258,19 @@ async function duckDetail(code){
    <button id="hideDuck" class="duck-choice hide">⌖ La nascondo di nuovo</button>
  </div>
 
+ ${!currentUser ? `
+ <section class="section guest-invite-section">
+   <article class="card guest-invite-card">
+     <div class="guest-invite-icon">👤+</div>
+     <div class="guest-invite-copy">
+       <h3>Vuoi entrare in Cruise360?</h3>
+       <p>Puoi partecipare anche senza account. Registrandoti gratuitamente avrai un profilo personale e potrai continuare a far parte della community Cruise360.</p>
+     </div>
+     <button id="guestSignup" class="primary full">Crea un account gratuito</button>
+     <button id="guestLater" class="secondary full">Continua senza account</button>
+   </article>
+ </section>` : ""}
+
  <section class="section"><div class="section-head"><h2>QR CODE</h2></div>
  <article class="card mini-qr-card"><img src="${qrImageUrl(duckUrl(duck.code))}">
  <div><strong>${escapeHtml(duck.code)}</strong><p class="small">QR permanente collegato alla scheda online.</p></div></article></section>
@@ -279,6 +292,10 @@ async function duckDetail(code){
  const keepBtn=document.getElementById("keepDuck");
  if(keepBtn && duck.status!=="kept") keepBtn.onclick=()=>duckKeepConfirm(duck);
  document.getElementById("hideDuck").onclick=()=>duckRehide(duck.code,duck.current_ship_slug);
+ const guestSignup=document.getElementById("guestSignup");
+ if(guestSignup) guestSignup.onclick=()=>openGuestSignup(duck.code);
+ const guestLater=document.getElementById("guestLater");
+ if(guestLater) guestLater.onclick=()=>document.querySelector(".guest-invite-section")?.remove();
 }
 
 function duckKeepConfirm(duck){
@@ -360,7 +377,11 @@ async function duckAction(code,eventType,shipSlug,place,actorName="",actorCountr
  }
 
  await refreshDuckCounts();
- await duckDetail(code);
+ if(!currentUser && (eventType==="kept" || eventType==="hidden")){
+   guestActionSuccess(code,eventType);
+ } else {
+   await duckDetail(code);
+ }
  return true;
 }
 
@@ -426,6 +447,38 @@ function duckRehide(code,currentShip){
    }
  };
 }
+function openGuestSignup(code){
+ state.inviteDuckCode=code;
+ profile();
+}
+
+function guestActionSuccess(code,eventType){
+ const actionText=eventType==="kept"
+   ? "Hai scelto di tenere questa Duck."
+   : "Hai registrato il nuovo nascondiglio.";
+
+ shell(`<button class="back" id="guestBackDuck">← Duck</button>
+ <div class="guest-success">
+   <div class="guest-success-icon">✓</div>
+   <h1>Fatto!</h1>
+   <p>${escapeHtml(actionText)}</p>
+
+   <article class="card guest-invite-card guest-invite-after">
+     <div class="guest-invite-icon">👤+</div>
+     <div class="guest-invite-copy">
+       <h3>Vuoi creare il tuo profilo?</h3>
+       <p>Registrati gratuitamente a Cruise360 oppure continua senza account.</p>
+     </div>
+     <button id="afterSignup" class="primary full">Crea il mio account</button>
+     <button id="afterContinue" class="secondary full">Continua senza account</button>
+   </article>
+ </div>`,"CRUISE360");
+
+ document.getElementById("guestBackDuck").onclick=()=>duckDetail(code);
+ document.getElementById("afterSignup").onclick=()=>openGuestSignup(code);
+ document.getElementById("afterContinue").onclick=()=>duckDetail(code);
+}
+
 function duckNotFound(code){
  shell(`<div class="center" style="padding:40px 0"><img src="duck.svg" style="width:100px"><h1>Duck non trovata</h1><p class="small">${escapeHtml(code||"")}</p><div style="height:14px"></div><button class="secondary" id="goDuck">Vai alla sezione Duck</button></div>`,"DUCK");
  document.getElementById("goDuck").onclick=()=>{history.replaceState({},"",location.pathname);duckSection()};
@@ -433,25 +486,45 @@ function duckNotFound(code){
 
 async function profile(){
  if(!currentUser){
-   shell(`<div class="center"><img class="profile-avatar" src="logo.jpeg"><h1>Profilo Cruise360</h1><p class="small">Accedi per creare Duck e sincronizzare i dati.</p></div>
+   const inviteCode=state.inviteDuckCode||"";
+   shell(`${inviteCode?`
+   <button class="back" id="backToInvitedDuck">← Torna alla Duck</button>
+   <div class="invite-profile-banner">
+     <strong>Hai trovato una Cruise Duck 🎉</strong>
+     <p>Registrati gratuitamente per entrare nella community Cruise360.</p>
+   </div>`:""}
+   <div class="center"><img class="profile-avatar" src="logo.jpeg"><h1>${inviteCode?"Crea il tuo account":"Profilo Cruise360"}</h1><p class="small">${inviteCode?"Bastano email e password.":"Accedi per creare Duck e sincronizzare i dati."}</p></div>
    <section class="section"><article class="card"><div class="form">
-    <label>Email<input id="authEmail" class="field" type="email"></label>
-    <label>Password<input id="authPassword" class="field" type="password"></label>
+    <label>Email<input id="authEmail" class="field" type="email" autocomplete="email"></label>
+    <label>Password<input id="authPassword" class="field" type="password" autocomplete="current-password"></label>
     <button id="loginBtn" class="primary full">Accedi</button>
-    <button id="signupBtn" class="secondary full">Crea account</button>
+    <button id="signupBtn" class="secondary full">${inviteCode?"Registrati gratis":"Crea account"}</button>
    </div></article></section>`,"PROFILO");
+   const backInvite=document.getElementById("backToInvitedDuck");
+   if(backInvite) backInvite.onclick=()=>{const c=state.inviteDuckCode;state.inviteDuckCode=null;duckDetail(c)};
    document.getElementById("loginBtn").onclick=async()=>{
      const email=document.getElementById("authEmail").value.trim(), password=document.getElementById("authPassword").value;
      const {error}=await db.auth.signInWithPassword({email,password});
      if(error){alert(error.message);return;}
-     await refreshSession(); profile();
+     await refreshSession();
+     if(state.inviteDuckCode){
+       const c=state.inviteDuckCode;
+       state.inviteDuckCode=null;
+       duckDetail(c);
+     } else {
+       profile();
+     }
    };
    document.getElementById("signupBtn").onclick=async()=>{
      const email=document.getElementById("authEmail").value.trim(), password=document.getElementById("authPassword").value;
      if(password.length<6){alert("Usa una password di almeno 6 caratteri.");return;}
      const {error}=await db.auth.signUp({email,password});
      if(error){alert(error.message);return;}
-     alert("Account creato. Se Supabase richiede la conferma email, apri il messaggio ricevuto e conferma.");
+     if(state.inviteDuckCode){
+       alert("Account creato! Controlla l'email per confermare la registrazione. Poi torna su Cruise360 e accedi.");
+     } else {
+       alert("Account creato. Se Supabase richiede la conferma email, apri il messaggio ricevuto e conferma.");
+     }
    };
    return;
  }
