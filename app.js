@@ -39,7 +39,7 @@ function fleet(){
    const filtered=ships.filter(s=>(state.filter==="Tutte"||s.cls===state.filter)&&s.name.toLowerCase().includes(q));
    document.getElementById("fleetGrid").innerHTML=filtered.map(s=>`
    <article class="card ship-card" data-ship="${s.name}">
-     <div class="ship-photo-wrap"><img src="${slug(s.name)}.jpeg" alt="${s.name}"></div>
+     <div class="ship-photo-wrap"><img class="ship-list-${slug(s.name)}" src="${slug(s.name)}.jpeg" alt="${s.name}"></div>
      <div class="ship-body"><div class="ship-title-row"><h3>${s.name}</h3><span class="ship-chevron">›</span></div>
      <div class="small">${s.cls}</div><div class="duck-count">🦆 ${s.ducks} Duck associate</div></div>
    </article>`).join("");

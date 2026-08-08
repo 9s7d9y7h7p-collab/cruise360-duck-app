@@ -147,13 +147,6 @@ label{display:grid;gap:6px;font-weight:700}
 @media(max-width:520px){.ship-photo-wrap{height:132px}}
 
 
-/* Inquadrature personalizzate scheda nave */
-.ship-hero-card .detail-image{
-  width:100%;
-  height:245px;
-  object-fit:cover;
-  transform-origin:center;
-}
 
 /* MSC Meraviglia: la nave è bassa nella foto originale.
    Spostiamo il ritaglio verso il basso e aumentiamo leggermente lo zoom. */
@@ -172,4 +165,32 @@ label{display:grid;gap:6px;font-weight:700}
 @media(max-width:520px){
   .ship-detail-meraviglia{object-position:50% 72%;transform:scale(1.12)}
   .ship-detail-armonia{object-position:50% 43%;transform:scale(1.20)}
+}
+
+
+/* Inquadrature personalizzate v1.3 */
+
+/* Nell'elenco MSC Meraviglia ha molto cielo nella foto originale:
+   spostiamo il ritaglio verso il basso per centrare la nave. */
+.ship-photo-wrap .ship-list-meraviglia{
+  object-position:50% 78%;
+}
+
+/* Scheda MSC Meraviglia: l'inquadratura attuale è già corretta. */
+.ship-hero-card .ship-detail-meraviglia{
+  object-position:50% 72%;
+  transform:scale(1.10);
+}
+
+/* MSC Armonia: niente zoom, perché il formato panoramico della scheda
+   ritaglia già molto in verticale. Posizioniamo la finestra sulla nave. */
+.ship-hero-card .ship-detail-armonia{
+  object-position:50% 34%;
+  transform:none;
+}
+
+@media(max-width:520px){
+  .ship-photo-wrap .ship-list-meraviglia{object-position:50% 80%}
+  .ship-hero-card .ship-detail-meraviglia{object-position:50% 72%;transform:scale(1.10)}
+  .ship-hero-card .ship-detail-armonia{object-position:50% 34%;transform:none}
 }
