@@ -20,3 +20,7 @@ Questa versione è ancora frontend dimostrativo: database, account reali e QR di
 
 ## Compatibilità iPad/GitHub
 Questa variante usa `logo.jpeg`, `seashore.jpeg` e `duck.svg` direttamente nella cartella principale del repository, così non è necessario creare la cartella `assets` da iPad.
+
+
+## v1.1 – Flotta MSC
+Aggiunte 23 navi con immagini fornite dall'utente, ricerca, filtri per classe e pagina nave dedicata. I dati tecnici completi saranno verificati e inseriti nel prossimo aggiornamento.

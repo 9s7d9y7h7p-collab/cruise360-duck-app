@@ -128,3 +128,20 @@ label{display:grid;gap:6px;font-weight:700}
  .badges{grid-template-columns:repeat(2,1fr)}
  .actions{grid-template-columns:1fr}
 }
+
+.fleet-heading h1{margin:0 0 3px}.fleet-heading p{margin:0;color:var(--muted)}
+.search-wrap{display:flex;align-items:center;gap:8px;margin-top:14px;background:#0B2748;border:1px solid var(--line);border-radius:15px;padding:0 12px;color:var(--muted)}
+.search.borderless{border:0;background:transparent;padding-left:0;box-shadow:none}
+.fleet-grid{align-items:stretch}
+.ship-card{padding:0;overflow:hidden;transition:transform .18s ease}
+.ship-card:active{transform:scale(.985)}
+.ship-photo-wrap{height:145px;overflow:hidden;background:#071A33}
+.ship-photo-wrap img{width:100%;height:100%;object-fit:cover}
+.ship-title-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.ship-title-row h3{margin:0}.ship-chevron{font-size:1.5rem;color:var(--cyan);line-height:1}
+.ship-hero-card{position:relative;border-radius:24px;overflow:hidden}
+.ship-hero-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 44%,rgba(3,18,35,.92))}
+.ship-overlay{position:absolute;z-index:2;left:16px;right:16px;bottom:14px}.ship-overlay h1{margin:0 0 2px}.ship-overlay div{color:#9FD7F4}
+.detail-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#0A2341;border:1px solid var(--line);padding:4px;border-radius:14px}
+.detail-tab{border:0;background:transparent;color:var(--muted);padding:10px 7px;border-radius:10px}.detail-tab.active{background:#123B68;color:#fff}
+@media(max-width:520px){.ship-photo-wrap{height:132px}}
