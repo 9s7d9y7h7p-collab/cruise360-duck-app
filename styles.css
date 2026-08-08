@@ -145,3 +145,31 @@ label{display:grid;gap:6px;font-weight:700}
 .detail-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#0A2341;border:1px solid var(--line);padding:4px;border-radius:14px}
 .detail-tab{border:0;background:transparent;color:var(--muted);padding:10px 7px;border-radius:10px}.detail-tab.active{background:#123B68;color:#fff}
 @media(max-width:520px){.ship-photo-wrap{height:132px}}
+
+
+/* Inquadrature personalizzate scheda nave */
+.ship-hero-card .detail-image{
+  width:100%;
+  height:245px;
+  object-fit:cover;
+  transform-origin:center;
+}
+
+/* MSC Meraviglia: la nave è bassa nella foto originale.
+   Spostiamo il ritaglio verso il basso e aumentiamo leggermente lo zoom. */
+.ship-detail-meraviglia{
+  object-position:50% 72%;
+  transform:scale(1.10);
+}
+
+/* MSC Armonia: nave relativamente piccola nella foto originale.
+   Zoom leggero e inquadratura un po' più alta. */
+.ship-detail-armonia{
+  object-position:50% 43%;
+  transform:scale(1.18);
+}
+
+@media(max-width:520px){
+  .ship-detail-meraviglia{object-position:50% 72%;transform:scale(1.12)}
+  .ship-detail-armonia{object-position:50% 43%;transform:scale(1.20)}
+}

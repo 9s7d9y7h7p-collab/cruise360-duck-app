@@ -53,7 +53,7 @@ function fleet(){
 function ship(){
  const s=ships.find(x=>x.name===state.ship)||ships[0];
  shell(`<button class="back" data-go="fleet">← Flotta</button>
- <div class="ship-hero-card"><img class="detail-image" src="${slug(s.name)}.jpeg" alt="${s.name}">
+ <div class="ship-hero-card"><img class="detail-image ship-detail-${slug(s.name)}" src="${slug(s.name)}.jpeg" alt="${s.name}">
  <div class="ship-overlay"><h1>${s.name}</h1><div>${s.cls}</div></div></div>
  <section class="section"><div class="detail-tabs"><button class="detail-tab active">Dettagli</button><button class="detail-tab">Duck associate</button><button class="detail-tab">Cronologia</button></div></section>
  <section class="section"><div class="section-head"><h2>DATI TECNICI</h2></div><article class="card table">${[
