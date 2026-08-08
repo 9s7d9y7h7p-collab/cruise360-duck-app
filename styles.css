@@ -215,3 +215,6 @@ label{display:grid;gap:6px;font-weight:700}
 .history-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:9px}.history-dot{color:var(--cyan);font-size:1.5rem;line-height:1}
 textarea.field{resize:vertical;min-height:88px}
 @media(max-width:520px){.duck-actions-grid,.duck-choice-grid{grid-template-columns:1fr}.mini-qr-card{align-items:flex-start}}
+
+.full{width:100%}
+.profile-avatar{width:92px;height:92px;object-fit:cover;border-radius:50%;border:2px solid var(--line)}
