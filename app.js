@@ -486,8 +486,8 @@ async function ship(){
    const {data,error}=await db.from("ducks").select("code,name,status,current_place,updated_at").eq("current_ship_slug",shipSlug).order("updated_at",{ascending:false});
    const box=document.getElementById("shipDuckList");
    if(error) box.innerHTML=`<div class="notice">Errore nel caricamento.</div>`;
-   else if(!data?.length) box.innerHTML=`<article class="card empty-panel"><img src="duck.svg"><h3>Nessuna Duck registrata</h3><p>Quando una Cruise Duck sarà associata a ${escapeHtml(s.name)}, comparirà qui.</p></article>`;
-   else box.innerHTML=data.map(d=>`<article class="card saved-duck" data-openduck="${escapeHtml(d.code)}"><img src="duck.svg"><div class="grow"><strong>${escapeHtml(d.name)}</strong><div class="small">${escapeHtml(d.code)} · ${statusLabel(d.status)} · ${escapeHtml(d.current_place||"")}</div></div><span class="ship-chevron">›</span></article>`).join("");
+   else if(!data?.length) box.innerHTML=`<article class="card empty-panel"><img src="duck-captain.png"><h3>Nessuna Duck registrata</h3><p>Quando una Cruise Duck sarà associata a ${escapeHtml(s.name)}, comparirà qui.</p></article>`;
+   else box.innerHTML=data.map(d=>`<article class="card saved-duck" data-openduck="${escapeHtml(d.code)}"><img src="duck-captain.png"><div class="grow"><strong>${escapeHtml(d.name)}</strong><div class="small">${escapeHtml(d.code)} · ${statusLabel(d.status)} · ${escapeHtml(d.current_place||"")}</div></div><span class="ship-chevron">›</span></article>`).join("");
    box.querySelectorAll("[data-openduck]").forEach(x=>x.onclick=()=>duckDetail(x.dataset.openduck));
  }
  if(tab==="history"){
@@ -528,8 +528,8 @@ async function duckSection(){
    <section class="section">
      <div class="section-head"><h2>LE MIE DUCK</h2><span class="badge blue">${saved.length}</span></div>
      ${!currentUser ? `<div class="notice">Accedi dal Profilo per vedere e creare le tue Duck.</div>` :
-       saved.length ? saved.map(d=>`<article class="card saved-duck" data-openduck="${escapeHtml(d.code)}"><img src="duck.svg"><div class="grow"><strong>${escapeHtml(d.name)}</strong><div class="small">${escapeHtml(d.code)} · ${statusLabel(d.status)}</div></div><span class="ship-chevron">›</span></article>`).join("") :
-       `<article class="card empty-panel"><img src="duck.svg"><h3>Nessuna Duck creata</h3><p>Crea la prima Duck e genera il suo QR code.</p></article>`}
+       saved.length ? saved.map(d=>`<article class="card saved-duck" data-openduck="${escapeHtml(d.code)}"><img src="duck-captain.png"><div class="grow"><strong>${escapeHtml(d.name)}</strong><div class="small">${escapeHtml(d.code)} · ${statusLabel(d.status)}</div></div><span class="ship-chevron">›</span></article>`).join("") :
+       `<article class="card empty-panel"><img src="duck-captain.png"><h3>Nessuna Duck creata</h3><p>Crea la prima Duck e genera il suo QR code.</p></article>`}
    </section>
  `,"DUCK");
  document.getElementById("createDuckAction").onclick=()=> currentUser ? duckCreate() : profile();
@@ -707,7 +707,7 @@ async function duckDetail(code){
    : "";
 
  shell(`<button class="back" id="backDuckList">← Duck</button>
- <div class="duck-detail-hero"><img src="duck.svg"><div><span class="badge green">${escapeHtml(statusLabel(duck.status))}</span><h1>${escapeHtml(duck.name)}</h1><div class="small">${escapeHtml(duck.code)}</div></div></div>
+ <div class="duck-detail-hero"><img src="duck-captain.png"><div><span class="badge green">${escapeHtml(statusLabel(duck.status))}</span><h1>${escapeHtml(duck.name)}</h1><div class="small">${escapeHtml(duck.code)}</div></div></div>
  <article class="card table">
  ${[["Codice",duck.code],["Nave",ship],["Ultimo luogo",duck.current_place||"—"],["Stato",statusLabel(duck.status)],["Creata",fmtDate(duck.created_at)]]
    .map(r=>`<div class="row"><span>${escapeHtml(r[0])}</span><strong>${escapeHtml(r[1])}</strong></div>`).join("")}
@@ -767,7 +767,7 @@ function duckKeepConfirm(duck){
 
  <article class="card">
    <div class="confirm-banner">
-     <img src="duck.svg">
+     <img src="duck-captain.png">
      <div><strong>${escapeHtml(duck.name)}</strong><div class="small">${escapeHtml(duck.code)}</div></div>
    </div>
 
@@ -943,7 +943,7 @@ function guestActionSuccess(code,eventType){
 }
 
 function duckNotFound(code){
- shell(`<div class="center" style="padding:40px 0"><img src="duck.svg" style="width:100px"><h1>Duck non trovata</h1><p class="small">${escapeHtml(code||"")}</p><div style="height:14px"></div><button class="secondary" id="goDuck">Vai alla sezione Duck</button></div>`,"DUCK");
+ shell(`<div class="center" style="padding:40px 0"><img src="duck-captain.png" style="width:100px"><h1>Duck non trovata</h1><p class="small">${escapeHtml(code||"")}</p><div style="height:14px"></div><button class="secondary" id="goDuck">Vai alla sezione Duck</button></div>`,"DUCK");
  document.getElementById("goDuck").onclick=()=>{history.replaceState({},"",location.pathname);duckSection()};
 }
 
@@ -1293,7 +1293,7 @@ function adminTools(tab,count){
 function adminDuckCard(d,showDelete=true){
  const ship=ships.find(s=>(s.dbslug||slug(s.name))===d.current_ship_slug);
  return `<article class="card admin-duck-card">
-   <img src="duck.svg" alt="Duck">
+   <img src="duck-captain.png" alt="Duck">
    <div class="grow">
      <strong>${escapeHtml(d.name)}</strong>
      <div class="small">${escapeHtml(d.code)} · ${escapeHtml(statusLabel(d.status))}</div>

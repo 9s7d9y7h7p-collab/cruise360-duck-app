@@ -490,3 +490,21 @@ textarea.field{resize:vertical;min-height:88px}
 }
 
 /* v2.6 standalone print page */
+
+/* v2.7 - Duck comandante */
+.empty-panel img[src="duck-captain.png"]{
+  width:118px;
+  height:118px;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.20));
+}
+.saved-duck img[src="duck-captain.png"],
+.duck-detail-hero img[src="duck-captain.png"],
+.admin-duck-card img[src="duck-captain.png"]{
+  object-fit:contain;
+  filter:drop-shadow(0 5px 10px rgba(0,0,0,.18));
+}
+.duck-detail-hero img[src="duck-captain.png"]{
+  width:92px;
+  height:92px;
+}
