@@ -508,3 +508,34 @@ textarea.field{resize:vertical;min-height:88px}
   width:92px;
   height:92px;
 }
+
+/* v2.8 - Recupero password */
+.auth-text-btn{
+  border:0;
+  background:transparent;
+  color:#69baff;
+  font-weight:800;
+  padding:4px 8px 8px;
+  text-align:center;
+  cursor:pointer;
+}
+.auth-recovery-head{
+  max-width:520px;
+  margin:0 auto;
+  padding:28px 6px 8px;
+  text-align:center;
+}
+.auth-recovery-head h1{margin:10px 0 6px}
+.auth-recovery-head p{margin:0;color:var(--muted);line-height:1.5}
+.auth-recovery-icon{
+  width:70px;height:70px;margin:0 auto;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(39,145,255,.14);
+  border:1px solid rgba(80,170,255,.24);
+  font-size:2rem;
+}
+.auth-recovery-icon.success{
+  background:rgba(47,201,92,.16);
+  color:#62e895;
+}

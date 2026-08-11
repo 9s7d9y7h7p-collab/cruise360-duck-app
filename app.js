@@ -259,6 +259,21 @@ const I18N={
 ,"Formato 89 × 50 mm, fronte singolo.":{en:"89 × 50 mm, single-sided.",fr:"89 × 50 mm, recto uniquement.",es:"89 × 50 mm, una sola cara.",de:"89 × 50 mm, einseitig."}
 ,"Il bigliettino usa automaticamente la lingua impostata nell'app.":{en:"The card automatically uses the language selected in the app.",fr:"La carte utilise automatiquement la langue choisie dans l’application.",es:"La tarjeta usa automáticamente el idioma seleccionado en la aplicación.",de:"Das Kärtchen verwendet automatisch die in der App gewählte Sprache."}
 
+,"Password dimenticata?":{en:"Forgot password?",fr:"Mot de passe oublié ?",es:"¿Olvidaste tu contraseña?",de:"Passwort vergessen?"}
+,"RECUPERA PASSWORD":{en:"RESET PASSWORD",fr:"RÉINITIALISER LE MOT DE PASSE",es:"RECUPERAR CONTRASEÑA",de:"PASSWORT ZURÜCKSETZEN"}
+,"Inserisci l'email usata per il tuo account Cruise360Travel.":{en:"Enter the email used for your Cruise360Travel account.",fr:"Saisissez l’e-mail utilisé pour votre compte Cruise360Travel.",es:"Introduce el correo usado para tu cuenta Cruise360Travel.",de:"Gib die E-Mail-Adresse deines Cruise360Travel-Kontos ein."}
+,"Invia link di recupero":{en:"Send reset link",fr:"Envoyer le lien de réinitialisation",es:"Enviar enlace de recuperación",de:"Link zum Zurücksetzen senden"}
+,"Ti abbiamo inviato un link per reimpostare la password. Controlla la tua email.":{en:"We sent you a link to reset your password. Check your email.",fr:"Nous vous avons envoyé un lien pour réinitialiser votre mot de passe. Consultez votre e-mail.",es:"Te hemos enviado un enlace para restablecer tu contraseña. Revisa tu correo.",de:"Wir haben dir einen Link zum Zurücksetzen deines Passworts gesendet. Prüfe deine E-Mails."}
+,"Torna al login":{en:"Back to login",fr:"Retour à la connexion",es:"Volver al inicio de sesión",de:"Zurück zur Anmeldung"}
+,"NUOVA PASSWORD":{en:"NEW PASSWORD",fr:"NOUVEAU MOT DE PASSE",es:"NUEVA CONTRASEÑA",de:"NEUES PASSWORT"}
+,"Scegli una nuova password per il tuo account.":{en:"Choose a new password for your account.",fr:"Choisissez un nouveau mot de passe pour votre compte.",es:"Elige una nueva contraseña para tu cuenta.",de:"Wähle ein neues Passwort für dein Konto."}
+,"Nuova password":{en:"New password",fr:"Nouveau mot de passe",es:"Nueva contraseña",de:"Neues Passwort"}
+,"Conferma password":{en:"Confirm password",fr:"Confirmer le mot de passe",es:"Confirmar contraseña",de:"Passwort bestätigen"}
+,"Aggiorna password":{en:"Update password",fr:"Mettre à jour le mot de passe",es:"Actualizar contraseña",de:"Passwort aktualisieren"}
+,"Le password non coincidono.":{en:"The passwords do not match.",fr:"Les mots de passe ne correspondent pas.",es:"Las contraseñas no coinciden.",de:"Die Passwörter stimmen nicht überein."}
+,"Password aggiornata correttamente. Ora puoi accedere con la nuova password.":{en:"Password updated successfully. You can now sign in with your new password.",fr:"Mot de passe mis à jour. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",es:"Contraseña actualizada correctamente. Ya puedes iniciar sesión con la nueva contraseña.",de:"Passwort erfolgreich aktualisiert. Du kannst dich jetzt mit dem neuen Passwort anmelden."}
+,"Invio...":{en:"Sending...",fr:"Envoi...",es:"Enviando...",de:"Senden..."}
+
 };
 
 function tr(text){
@@ -961,10 +976,12 @@ async function profile(){
     <label>Email<input id="authEmail" class="field" type="email" autocomplete="email"></label>
     <label>Password<input id="authPassword" class="field" type="password" autocomplete="current-password"></label>
     <button id="loginBtn" class="primary full">Accedi</button>
+    <button id="forgotPasswordBtn" class="auth-text-btn">Password dimenticata?</button>
     <button id="signupBtn" class="secondary full">${inviteCode?"Registrati gratis":"Crea account"}</button>
    </div></article></section>`,"PROFILO");
    const backInvite=document.getElementById("backToInvitedDuck");
    if(backInvite) backInvite.onclick=()=>{const c=state.inviteDuckCode;state.inviteDuckCode=null;duckDetail(c)};
+   document.getElementById("forgotPasswordBtn").onclick=passwordRecoveryRequestScreen;
    document.getElementById("loginBtn").onclick=async()=>{
      const email=document.getElementById("authEmail").value.trim(), password=document.getElementById("authPassword").value;
      const {error}=await db.auth.signInWithPassword({email,password});
@@ -1064,6 +1081,85 @@ function renderCruiseList(list){
  }).join("");
 }
 
+
+
+function passwordRecoveryRequestScreen(){
+ shell(`<button class="back" id="backLogin">← Torna al login</button>
+ <div class="auth-recovery-head">
+   <div class="auth-recovery-icon">🔑</div>
+   <h1>RECUPERA PASSWORD</h1>
+   <p>Inserisci l'email usata per il tuo account Cruise360Travel.</p>
+ </div>
+ <section class="section"><article class="card"><div class="form">
+   <label>Email<input id="recoveryEmail" class="field" type="email" autocomplete="email"></label>
+   <button id="sendRecoveryBtn" class="primary full">Invia link di recupero</button>
+ </div></article></section>`,"PROFILO");
+
+ document.getElementById("backLogin").onclick=profile;
+ document.getElementById("sendRecoveryBtn").onclick=async()=>{
+   const email=document.getElementById("recoveryEmail").value.trim();
+   if(!email){alert("Email");return;}
+   const btn=document.getElementById("sendRecoveryBtn");
+   btn.disabled=true;
+   btn.textContent=tr("Invio...");
+   const {error}=await db.auth.resetPasswordForEmail(email,{
+     redirectTo:PUBLIC_APP_URL+"/?reset=password"
+   });
+   if(error){
+     btn.disabled=false;
+     btn.textContent=tr("Invia link di recupero");
+     alert(error.message);
+     return;
+   }
+   shell(`<div class="auth-recovery-head">
+     <div class="auth-recovery-icon success">✓</div>
+     <h1>RECUPERA PASSWORD</h1>
+     <p>Ti abbiamo inviato un link per reimpostare la password. Controlla la tua email.</p>
+     <div style="height:12px"></div>
+     <button id="recoveryBackLogin" class="secondary">Torna al login</button>
+   </div>`,"PROFILO");
+   document.getElementById("recoveryBackLogin").onclick=profile;
+ };
+}
+
+function passwordUpdateScreen(){
+ state.passwordRecovery=true;
+ shell(`<div class="auth-recovery-head">
+   <div class="auth-recovery-icon">🔐</div>
+   <h1>NUOVA PASSWORD</h1>
+   <p>Scegli una nuova password per il tuo account.</p>
+ </div>
+ <section class="section"><article class="card"><div class="form">
+   <label>Nuova password<input id="newPassword" class="field" type="password" autocomplete="new-password"></label>
+   <label>Conferma password<input id="confirmPassword" class="field" type="password" autocomplete="new-password"></label>
+   <button id="updatePasswordBtn" class="primary full">Aggiorna password</button>
+ </div></article></section>`,"PROFILO");
+
+ document.getElementById("updatePasswordBtn").onclick=async()=>{
+   const password=document.getElementById("newPassword").value;
+   const confirmPassword=document.getElementById("confirmPassword").value;
+   if(password.length<6){alert("Usa una password di almeno 6 caratteri.");return;}
+   if(password!==confirmPassword){alert("Le password non coincidono.");return;}
+
+   const btn=document.getElementById("updatePasswordBtn");
+   btn.disabled=true;
+   btn.textContent=tr("Salvataggio...");
+   const {error}=await db.auth.updateUser({password});
+   if(error){
+     btn.disabled=false;
+     btn.textContent=tr("Aggiorna password");
+     alert(error.message);
+     return;
+   }
+
+   state.passwordRecovery=false;
+   history.replaceState({}, "", location.pathname);
+   await db.auth.signOut();
+   currentUser=null;
+   alert("Password aggiornata correttamente. Ora puoi accedere con la nuova password.");
+   profile();
+ };
+}
 
 async function saveProfileDetails(){
  const display_name=document.getElementById("profileDisplayName").value.trim();
@@ -1344,11 +1440,30 @@ const translationObserver=new MutationObserver(mutations=>{
 translationObserver.observe(app,{childList:true,subtree:true});
 
 async function init(){
+ let recoveryEvent=false;
+ db.auth.onAuthStateChange((event,session)=>{
+   currentUser=session?.user||null;
+   if(event==="PASSWORD_RECOVERY"){
+     recoveryEvent=true;
+     state.passwordRecovery=true;
+     passwordUpdateScreen();
+   }
+ });
+
  await refreshSession();
  await loadShips();
  await refreshDuckCounts();
- db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;});
- const code=new URLSearchParams(location.search).get("duck");
+
+ const params=new URLSearchParams(location.search);
+ const code=params.get("duck");
+ const reset=params.get("reset");
+
+ if(!recoveryEvent && reset==="password" && currentUser){
+   state.passwordRecovery=true;
+   passwordUpdateScreen();
+   return;
+ }
+
  if(code) await duckDetail(code); else render();
 }
 init();
