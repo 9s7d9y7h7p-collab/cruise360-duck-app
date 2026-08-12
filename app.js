@@ -1011,7 +1011,13 @@ async function profile(){
    document.getElementById("signupBtn").onclick=async()=>{
      const email=document.getElementById("authEmail").value.trim(), password=document.getElementById("authPassword").value;
      if(password.length<6){alert("Usa una password di almeno 6 caratteri.");return;}
-     const {error}=await db.auth.signUp({email,password});
+     const {error}=await db.auth.signUp({
+       email,
+       password,
+       options:{
+         emailRedirectTo: PUBLIC_APP_URL
+       }
+     });
      if(error){alert(error.message);return;}
      if(state.inviteDuckCode){
        alert("Account creato! Controlla l'email per confermare la registrazione. Poi torna su Cruise360Travel e accedi.");
