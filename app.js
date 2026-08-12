@@ -274,6 +274,19 @@ const I18N={
 ,"Password aggiornata correttamente. Ora puoi accedere con la nuova password.":{en:"Password updated successfully. You can now sign in with your new password.",fr:"Mot de passe mis à jour. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",es:"Contraseña actualizada correctamente. Ya puedes iniciar sesión con la nueva contraseña.",de:"Passwort erfolgreich aktualisiert. Du kannst dich jetzt mit dem neuen Passwort anmelden."}
 ,"Invio...":{en:"Sending...",fr:"Envoi...",es:"Enviando...",de:"Senden..."}
 
+,"Preparazione recupero password...":{en:"Preparing password reset...",fr:"Préparation de la réinitialisation...",es:"Preparando recuperación de contraseña...",de:"Passwort-Zurücksetzung wird vorbereitet..."}
+,"Link di recupero non valido o scaduto. Richiedine uno nuovo.":{en:"The recovery link is invalid or expired. Request a new one.",fr:"Le lien de récupération est invalide ou expiré. Demandez-en un nouveau.",es:"El enlace de recuperación no es válido o ha caducado. Solicita uno nuevo.",de:"Der Wiederherstellungslink ist ungültig oder abgelaufen. Fordere einen neuen an."}
+
+,"Elimina il mio account":{en:"Delete my account",fr:"Supprimer mon compte",es:"Eliminar mi cuenta",de:"Mein Konto löschen"}
+,"ELIMINA ACCOUNT":{en:"DELETE ACCOUNT",fr:"SUPPRIMER LE COMPTE",es:"ELIMINAR CUENTA",de:"KONTO LÖSCHEN"}
+,"Questa operazione è definitiva. Profilo e crociere verranno eliminati. Le Duck e la loro cronologia resteranno attive.":{en:"This action is permanent. Your profile and cruises will be deleted. Ducks and their history will remain active.",fr:"Cette action est définitive. Votre profil et vos croisières seront supprimés. Les Ducks et leur historique resteront actifs.",es:"Esta acción es permanente. Tu perfil y tus cruceros se eliminarán. Las Ducks y su historial seguirán activos.",de:"Diese Aktion ist endgültig. Profil und Kreuzfahrten werden gelöscht. Ducks und deren Verlauf bleiben aktiv."}
+,"Conferma eliminazione account":{en:"Confirm account deletion",fr:"Confirmer la suppression du compte",es:"Confirmar eliminación de cuenta",de:"Kontolöschung bestätigen"}
+,"Sei sicuro? Non potrai recuperare questo account.":{en:"Are you sure? You will not be able to recover this account.",fr:"Êtes-vous sûr ? Vous ne pourrez pas récupérer ce compte.",es:"¿Estás seguro? No podrás recuperar esta cuenta.",de:"Bist du sicher? Dieses Konto kann nicht wiederhergestellt werden."}
+,"Account eliminato correttamente.":{en:"Account deleted successfully.",fr:"Compte supprimé avec succès.",es:"Cuenta eliminada correctamente.",de:"Konto erfolgreich gelöscht."}
+,"Elimina utente":{en:"Delete user",fr:"Supprimer l’utilisateur",es:"Eliminar usuario",de:"Benutzer löschen"}
+,"Eliminare definitivamente questo account? Profilo e crociere verranno rimossi, mentre Duck e cronologia resteranno attive.":{en:"Permanently delete this account? Profile and cruises will be removed, while Ducks and history remain active.",fr:"Supprimer définitivement ce compte ? Le profil et les croisières seront supprimés, tandis que les Ducks et leur historique resteront actifs.",es:"¿Eliminar definitivamente esta cuenta? Se borrarán el perfil y los cruceros, mientras las Ducks y su historial seguirán activos.",de:"Dieses Konto endgültig löschen? Profil und Kreuzfahrten werden entfernt, Ducks und Verlauf bleiben aktiv."}
+,"Eliminazione...":{en:"Deleting...",fr:"Suppression...",es:"Eliminando...",de:"Löschen..."}
+
 };
 
 function tr(text){
@@ -1055,6 +1068,16 @@ async function profile(){
    </article>
  </section>` : ""}
 
+ <section class="section">
+   <article class="card account-danger-zone">
+     <div class="danger-zone-copy">
+       <h3>ELIMINA ACCOUNT</h3>
+       <p>Questa operazione è definitiva. Profilo e crociere verranno eliminati. Le Duck e la loro cronologia resteranno attive.</p>
+     </div>
+     <button id="deleteMyAccountBtn" class="danger-btn full">Elimina il mio account</button>
+   </article>
+ </section>
+
  <section class="section"><article class="card"><div class="form"><button id="logoutBtn" class="secondary full">Esci dall'account</button></div></article></section>`,"PROFILO");
 
  document.getElementById("saveProfileBtn").onclick=saveProfileDetails;
@@ -1062,7 +1085,35 @@ async function profile(){
  document.querySelectorAll("[data-delete-cruise]").forEach(btn=>btn.onclick=()=>deleteCruise(btn.dataset.deleteCruise));
  const adminPanelBtn=document.getElementById("adminPanelBtn");
  if(adminPanelBtn) adminPanelBtn.onclick=()=>adminPanel();
+ document.getElementById("deleteMyAccountBtn").onclick=deleteMyAccount;
  document.getElementById("logoutBtn").onclick=async()=>{await db.auth.signOut();currentUser=null;profile()};
+}
+
+
+async function deleteMyAccount(){
+ if(!currentUser) return;
+ if(!confirm(tr("Conferma eliminazione account")+"\n\n"+tr("Questa operazione è definitiva. Profilo e crociere verranno eliminati. Le Duck e la loro cronologia resteranno attive."))) return;
+ if(!confirm(tr("Sei sicuro? Non potrai recuperare questo account."))) return;
+
+ const btn=document.getElementById("deleteMyAccountBtn");
+ if(btn){btn.disabled=true;btn.textContent=tr("Eliminazione...");}
+
+ const {data,error}=await db.functions.invoke("delete-account",{body:{}});
+ if(error){
+   if(btn){btn.disabled=false;btn.textContent=tr("Elimina il mio account");}
+   alert(error.message||"Errore durante l'eliminazione dell'account");
+   return;
+ }
+ if(data?.error){
+   if(btn){btn.disabled=false;btn.textContent=tr("Elimina il mio account");}
+   alert(data.error);
+   return;
+ }
+
+ try{await db.auth.signOut();}catch(_){}
+ currentUser=null;
+ alert("Account eliminato correttamente.");
+ profile();
 }
 
 function renderCruiseList(list){
@@ -1120,6 +1171,16 @@ function passwordRecoveryRequestScreen(){
    </div>`,"PROFILO");
    document.getElementById("recoveryBackLogin").onclick=profile;
  };
+}
+
+
+function passwordRecoveryWaitingScreen(){
+ state.passwordRecovery=true;
+ shell(`<div class="auth-recovery-head">
+   <div class="auth-recovery-icon">🔐</div>
+   <h1>NUOVA PASSWORD</h1>
+   <p>Preparazione recupero password...</p>
+ </div>`,"PROFILO");
 }
 
 function passwordUpdateScreen(){
@@ -1312,7 +1373,10 @@ async function adminPanel(tab=state.adminTab||"overview"){
          ${u.username?`<div class="small">@${escapeHtml(u.username)}</div>`:""}
          <div class="small">Registrato il ${fmtDate(u.created_at)}</div>
        </div>
-       ${u.is_admin?`<span class="badge blue">Amministratore</span>`:""}
+       <div class="admin-user-actions">
+         ${u.is_admin?`<span class="badge blue">Amministratore</span>`:""}
+         ${(!u.is_admin && u.user_id!==currentUser.id)?`<button class="danger-btn mini-btn" data-admin-delete-user="${escapeHtml(u.user_id)}" data-admin-delete-email="${escapeHtml(u.email||"")}">Elimina utente</button>`:""}
+       </div>
      </article>`).join("") || `<article class="card empty-panel"><h3>Nessun risultato</h3></article>`}</section>`;
  } else if(tab==="ducks"){
    const filtered=sorted(ducks||[]).filter(d=>{
@@ -1366,6 +1430,7 @@ async function adminPanel(tab=state.adminTab||"overview"){
  document.querySelectorAll("[data-admin-open-duck]").forEach(b=>b.onclick=()=>duckDetail(b.dataset.adminOpenDuck));
  document.querySelectorAll("[data-admin-delete-duck]").forEach(b=>b.onclick=()=>adminDeleteDuck(b.dataset.adminDeleteDuck));
  document.querySelectorAll("[data-admin-delete-cruise]").forEach(b=>b.onclick=()=>adminDeleteCruise(b.dataset.adminDeleteCruise));
+ document.querySelectorAll("[data-admin-delete-user]").forEach(b=>b.onclick=()=>adminDeleteUser(b.dataset.adminDeleteUser,b.dataset.adminDeleteEmail||""));
 }
 
 function adminTools(tab,count){
@@ -1400,6 +1465,23 @@ function adminDuckCard(d,showDelete=true){
      ${showDelete?`<button class="danger-btn mini-btn" data-admin-delete-duck="${escapeHtml(d.id)}">Elimina Duck</button>`:""}
    </div>
  </article>`;
+}
+
+
+async function adminDeleteUser(userId,email=""){
+ if(!userId || userId===currentUser?.id) return;
+ const label=email?`\n\n${email}`:"";
+ if(!confirm(tr("Eliminare definitivamente questo account? Profilo e crociere verranno rimossi, mentre Duck e cronologia resteranno attive.")+label)) return;
+ if(!confirm(tr("Sei sicuro? Non potrai recuperare questo account."))) return;
+
+ const {data,error}=await db.functions.invoke("delete-account",{
+   body:{target_user_id:userId}
+ });
+ if(error){alert(error.message||"Errore durante l'eliminazione dell'account");return;}
+ if(data?.error){alert(data.error);return;}
+
+ alert("Account eliminato correttamente.");
+ adminPanel("users");
 }
 
 async function adminDeleteDuck(id){
@@ -1440,30 +1522,75 @@ const translationObserver=new MutationObserver(mutations=>{
 translationObserver.observe(app,{childList:true,subtree:true});
 
 async function init(){
- let recoveryEvent=false;
+ const params=new URLSearchParams(location.search);
+ const reset=params.get("reset");
+ const authCode=params.get("code");
+ const isReset=reset==="password";
+
+ let recoveryRendered=false;
+
+ // Subscribe before reading the session: Supabase emits PASSWORD_RECOVERY
+ // after processing a recovery link.
  db.auth.onAuthStateChange((event,session)=>{
    currentUser=session?.user||null;
    if(event==="PASSWORD_RECOVERY"){
-     recoveryEvent=true;
+     recoveryRendered=true;
      state.passwordRecovery=true;
-     passwordUpdateScreen();
+     setTimeout(()=>passwordUpdateScreen(),0);
    }
  });
+
+ // If the redirect explicitly says this is a password reset, never render Home first.
+ if(isReset) passwordRecoveryWaitingScreen();
+
+ // PKCE-compatible fallback: if Supabase returns ?code=..., exchange it explicitly.
+ // (The normal browser client may already have exchanged it automatically.)
+ if(isReset && authCode){
+   const {data:{session:existingSession}}=await db.auth.getSession();
+   if(!existingSession){
+     const {error}=await db.auth.exchangeCodeForSession(authCode);
+     if(error){
+       shell(`<div class="auth-recovery-head">
+         <div class="auth-recovery-icon">⚠️</div>
+         <h1>RECUPERA PASSWORD</h1>
+         <p>Link di recupero non valido o scaduto. Richiedine uno nuovo.</p>
+         <div style="height:12px"></div>
+         <button id="recoveryRetry" class="primary">Password dimenticata?</button>
+       </div>`,"PROFILO");
+       document.getElementById("recoveryRetry").onclick=passwordRecoveryRequestScreen;
+       return;
+     }
+   }
+ }
 
  await refreshSession();
  await loadShips();
  await refreshDuckCounts();
 
- const params=new URLSearchParams(location.search);
- const code=params.get("duck");
- const reset=params.get("reset");
+ if(isReset){
+   // Give the auth client a brief moment to finish URL/session detection.
+   for(let i=0;i<10 && !currentUser;i++){
+     await new Promise(r=>setTimeout(r,120));
+     const {data:{session}}=await db.auth.getSession();
+     if(session) currentUser=session.user;
+   }
 
- if(!recoveryEvent && reset==="password" && currentUser){
-   state.passwordRecovery=true;
-   passwordUpdateScreen();
+   if(currentUser){
+     if(!recoveryRendered) passwordUpdateScreen();
+   }else{
+     shell(`<div class="auth-recovery-head">
+       <div class="auth-recovery-icon">⚠️</div>
+       <h1>RECUPERA PASSWORD</h1>
+       <p>Link di recupero non valido o scaduto. Richiedine uno nuovo.</p>
+       <div style="height:12px"></div>
+       <button id="recoveryRetry" class="primary">Password dimenticata?</button>
+     </div>`,"PROFILO");
+     document.getElementById("recoveryRetry").onclick=passwordRecoveryRequestScreen;
+   }
    return;
  }
 
+ const code=params.get("duck");
  if(code) await duckDetail(code); else render();
 }
 init();

@@ -539,3 +539,21 @@ textarea.field{resize:vertical;min-height:88px}
   background:rgba(47,201,92,.16);
   color:#62e895;
 }
+
+/* v2.9 - eliminazione account */
+.account-danger-zone{
+  border-color:rgba(255,88,88,.32)!important;
+  background:linear-gradient(180deg,rgba(95,20,30,.20),rgba(24,52,82,.88))!important;
+}
+.danger-zone-copy h3{margin:0 0 7px;color:#ff8f98}
+.danger-zone-copy p{margin:0 0 14px;color:var(--muted);line-height:1.5}
+.admin-user-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:8px;
+}
+@media(max-width:620px){
+  .admin-user-card{align-items:flex-start}
+  .admin-user-actions{width:100%;align-items:stretch}
+}
